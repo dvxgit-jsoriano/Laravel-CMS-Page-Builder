@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('block_id')->constrained();
             $table->string('field_key')->default('title');
-            $table->text('field_value')->default('');
+            $table->text('field_value');
             $table->string('field_type')->default('text');
             $table->timestamps();
         });
