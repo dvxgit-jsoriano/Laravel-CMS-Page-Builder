@@ -1,0 +1,237 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Added shadow */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.nav-right {
+    position: relative;
+}
+
+.profile-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f2f2f2;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu.show {
+    display: flex;
+}
+
+/* Layout */
+.builder-main {
+    display: flex;
+    height: calc(100vh - 70px);
+    /* adjust depending on header height */
+    flex-wrap: nowrap;
+}
+
+.builder-sidebar {
+    width: 20%;
+    background-color: #f1f1f1;
+    border-right: 1px solid #ddd;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.builder-canvas {
+    width: 80%;
+    padding: 2rem;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+/* Canvas Header */
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Titles */
+.section-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #444;
+}
+
+/* Component List */
+.draggable-list {
+    list-style: none;
+}
+
+.draggable-list li {
+    background-color: #fff;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: grab;
+    transition: background 0.2s ease;
+}
+
+.draggable-list li:hover {
+    background-color: #e6f7ff;
+}
+
+/* Canvas Area */
+.canvas-content {
+    border: 2px dashed #ccc;
+    min-height: 400px;
+    padding: 1rem;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+/* Buttons */
+.canvas-buttons {
+    margin-bottom: 1rem;
+}
+
+.canvas-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    border: none;
+    margin-right: 10px;
+}
+
+.btn-clear {
+    background-color: #f44336;
+    /* Red for Clear */
+    color: #fff;
+}
+
+.btn-clear:hover {
+    background-color: #e53935;
+    transform: scale(1.05);
+}
+
+.btn-preview {
+    background-color: #4caf50;
+    /* Green for Preview */
+    color: #fff;
+}
+
+.btn-preview:hover {
+    background-color: #43a047;
+    transform: scale(1.05);
+}
+
+/* Hover effect */
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .builder-main {
+        flex-direction: column;
+        /* Stack vertically */
+        height: auto;
+    }
+
+    .builder-sidebar {
+        width: 100%;
+        /* Full width for sidebar */
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .builder-canvas {
+        width: 100%;
+        /* Full width for canvas */
+        padding: 1rem;
+    }
+
+    /* Optional: Adjust the header as well */
+    .canvas-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .canvas-buttons {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .canvas-buttons button {
+        width: 100%;
+        /* Make buttons full-width on mobile */
+    }
+}

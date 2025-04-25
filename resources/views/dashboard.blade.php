@@ -28,6 +28,30 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
+    <style>
+        #builder-root,
+        #builder-root * {
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        #builder-root input,
+        #builder-root textarea,
+        #builder-root select,
+        #builder-root button,
+        #builder-root a,
+        #builder-root ul,
+        #builder-root ol,
+        #builder-root li {
+            all: revert;
+        }
+    </style>
+
+    {{-- Load Tailwind after --}}
+    <link id="tailwind-styles" href="https://cdn.tailwindcss.com" rel="stylesheet">
+
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -112,7 +136,8 @@
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         John Pierce
-                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                                        <span class="float-right text-sm text-muted"><i
+                                                class="fas fa-star"></i></span>
                                     </h3>
                                     <p class="text-sm">I got your message bro</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
@@ -195,36 +220,19 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
-                </div>
-
-                <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <li class="nav-item menu-open">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        {{-- <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -252,8 +260,8 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="nav-item">
+                        </li> --}}
+                        {{-- <li class="nav-item">
                             <a href="pages/widgets.html" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -261,161 +269,7 @@
                                     <span class="right badge badge-danger">New</span>
                                 </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>
-                                    Layout Options
-                                    <i class="fas fa-angle-left right"></i>
-                                    <span class="badge badge-info right">6</span>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Top Navigation</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Top Navigation + Sidebar</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/boxed.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Boxed</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/fixed-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Fixed Sidebar</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/fixed-sidebar-custom.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Fixed Sidebar <small>+ Custom Area</small></p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/fixed-topnav.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Fixed Navbar</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/fixed-footer.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Fixed Footer</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/collapsed-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Collapsed Sidebar</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
-                                    Charts
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/charts/chartjs.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>ChartJS</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/charts/flot.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Flot</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/charts/inline.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inline</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/charts/uplot.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>uPlot</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tree"></i>
-                                <p>
-                                    UI Elements
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/UI/general.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>General</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/icons.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Icons</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/buttons.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Buttons</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/sliders.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Sliders</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/modals.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Modals & Alerts</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/navbar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Navbar & Tabs</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/timeline.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Timeline</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/UI/ribbons.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Ribbons</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
@@ -451,35 +305,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Tables
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/tables/simple.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Simple Tables</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/tables/data.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>DataTables</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/tables/jsgrid.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>jsGrid</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -510,7 +335,92 @@
             <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
-                    Test
+
+                    <section class="content">
+                        <div class="row">
+                            <!-- LEFT -->
+                            <div class="col-md-3">
+                                {{-- <a href="compose.html" class="btn btn-primary btn-block mb-3">Compose</a> --}}
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Blocks</h3>
+
+                                        {{-- <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div> --}}
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <div class="callout callout-info">
+                                            <h5>Block Navigation</h5>
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+
+                                        <div class="callout callout-info">
+                                            <h5>Block Hero</h5>
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+
+                                        <div class="callout callout-info">
+                                            <h5>Block Left Image</h5>
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+
+                                        <div class="callout callout-info">
+                                            <h5>Block Right Image</h5>
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+
+                                        <div class="callout callout-info">
+                                            <h5>Block Banner</h5>
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+
+                                        <div class="callout callout-info">
+                                            <img src="https://www.wickedblocks.dev/screenshots/original/sidebar3.png"
+                                                style="width: 100%;" alt="">
+
+                                            {{-- <p>Follow the steps to continue to payment.</p> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- RIGHT -->
+                            <div class="col-md-9">
+                                <div class="card card-primary card-outline">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Page Layout</h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div id="builder-root">
+                                            {{-- This area will use Tailwind styles --}}
+                                            <div class="bg-gray-100 p-4 rounded-lg shadow">
+                                                <h1 class="text-2xl font-bold text-blue-500">Tailwind Layout</h1>
+                                                <p class="text-gray-700">This area is styled only by Tailwind.</p>
+                                            </div>
+
+                                            <div class="p-4 bg-green-200 text-green-800 rounded">
+                                                If this is green and rounded, Tailwind is working 🎉
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="card-footer p-0">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
             </section>
             <!-- /.content -->
