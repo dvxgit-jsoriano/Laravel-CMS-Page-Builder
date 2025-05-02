@@ -10,6 +10,20 @@ class SiteContentSeeder extends Seeder
 {
     public function run()
     {
+
+        // Create template
+        $template = DB::table('templates')->insert([
+            'name' => 'Default Template',
+            'slug' => 'default-template',
+            'desc' => 'This is the default template'
+        ]);
+
+        $template = DB::table('templates')->insert([
+            'name' => 'Wicked Blocks',
+            'slug' => 'wicked-blocks',
+            'desc' => 'This is the wicked blocks template'
+        ]);
+
         // Create site
         $site = DB::table('sites')->insertGetId([
             'user_id' => 1, // adjust based on existing user

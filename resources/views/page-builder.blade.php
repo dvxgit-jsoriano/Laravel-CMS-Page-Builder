@@ -21,7 +21,7 @@
 
     <main class="builder-main">
         <aside class="builder-sidebar">
-            <h2 class="section-title">Components</h2>
+            <h2 class="section-title">Components [{{ $template->name ?? 'Default Template' }}]</h2>
             <ul id="draggable-list" class="draggable-list">
                 <li data-block-type="block-navbar">Navigation Bar</li>
                 <li data-block-type="block-hero">Hero</li>
