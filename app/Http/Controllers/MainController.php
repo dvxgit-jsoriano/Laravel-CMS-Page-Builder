@@ -11,8 +11,12 @@ class MainController extends Controller
 {
     public function index()
     {
+        // Load the selected template...
         $template = Template::where('name', 'Wicked Blocks')->first();
-        return view('page-builder', compact('template'));
+        // Load the pages under this site...
+        $pages = Page::where('site_id', '1')->get();
+        // Return the view page-builder
+        return view('page-builder', compact('template', 'pages'));
     }
 
     public function pages($siteId)
