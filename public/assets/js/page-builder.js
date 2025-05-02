@@ -212,3 +212,7 @@ function openTab() {
         newWindow.document.close();
     });
 }
+
+function fetchPageData(page) {
+
+}

@@ -13,3 +13,6 @@ Route::get('/dashboard', function () {
 Route::get('/page-builder', function () {
     return view('page-builder');
 });
+
+Route::get('pages/{siteId}', [MainController::class, 'pages']);
+Route::get('page-data/{id}', [MainController::class, 'pageData']);

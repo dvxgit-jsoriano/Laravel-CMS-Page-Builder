@@ -22,6 +22,19 @@
     <main class="builder-main">
         <aside class="builder-sidebar">
             <h2 class="section-title">Components [{{ $template->name ?? 'Default Template' }}]</h2>
+            <div class="page-dropdown">
+                <h3 class="section-title">Page:</h3>
+                <select name="select-page" id="select-page" class="select-page">
+                    @if (!empty($pages) && count($pages) > 0)
+                        @foreach ($pages as $page)
+                            <option value="{{ $page->name ?? '' }}">{{ $page->name ?? '' }}</option>
+                        @endforeach
+                    @else
+                        <option disabled>No pages available</option>
+                    @endif
+                </select>
+            </div>
+
             <ul id="draggable-list" class="draggable-list">
                 <li data-block-type="block-navbar">Navigation Bar</li>
                 <li data-block-type="block-hero">Hero</li>
