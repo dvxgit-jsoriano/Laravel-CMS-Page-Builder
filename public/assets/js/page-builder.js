@@ -23,10 +23,7 @@ $(document).ready(function () {
             evt.item.remove();
 
             // Show loading (optional)
-            const loading = document.createElement('div');
-            loading.textContent = "Loading...";
-            loading.className = "text-center p-4 text-gray-600";
-            evt.to.appendChild(loading);
+            //document.getElementById('loading-overlay').classList.add('show');
 
             const response = {
                 type: 'hero',
@@ -42,10 +39,9 @@ $(document).ready(function () {
             const wrapper = document.createElement('div');
             wrapper.innerHTML = blockHTML;
 
-            // Remove loading before adding the block
-            loading.remove();
-
             evt.to.appendChild(wrapper.firstElementChild);
+
+            showLoadingOverlay(1000); // Show for 1 second
 
             // AJAX to server to create block
             /* $.ajax({
@@ -81,7 +77,7 @@ $(document).ready(function () {
             }); */
 
             // Remove loading before adding the block
-            loading.remove();
+            //document.getElementById('loading-overlay').classList.remove('show');
         }
     });
 
@@ -158,4 +154,61 @@ $(document).ready(function () {
             return escapeMap[match];
         });
     }
+
+    function showLoadingOverlay(duration = 1000) {
+        const $loadingOverlay = $('#loading-overlay');
+        /* $loadingOverlay
+            .addClass('show')      // Ensures proper layout (e.g., flex)
+            .fadeIn(200, function () {
+                setTimeout(() => {
+                    $(this).fadeOut(200, function () {
+                        $(this).removeClass('show'); // Clean up after fade
+                    });
+                }, duration);
+            }); */
+
+        // Show loading overlay
+        $loadingOverlay.addClass('show');
+
+        // For demo, added delay of 1 second
+        setTimeout(() => {
+            // Hide loading overlay
+            $loadingOverlay.removeClass('show');
+        }, duration);
+    }
+
+
 });
+
+/**
+ * Page Builder page functions
+ */
+function openTab() {
+    // Clone the layout content using jQuery
+    const $clonedLayout = $('#sortable-list').clone();
+
+    // Remove all elements with class 'edit-btn'
+    $clonedLayout.find('.edit-btn').remove();
+    $clonedLayout.find('.loading-overlay').remove();
+
+    const layoutContent = $clonedLayout.html();
+
+    const html =
+        '<!DOCTYPE html>' +
+        '<html lang="en">' +
+        '<head>' +
+        '<meta charset="UTF-8">' +
+        '<title>Exported Layout</title>' +
+        '<script src="https://cdn.tailwindcss.com"><\/script>' +
+        '</head>' +
+        '<body class="bg-gray-50">' +
+        layoutContent +
+        '</body>' +
+        '</html>';
+
+    const newWindow = window.open('', '_blank');
+    $(newWindow.document).ready(function () {
+        newWindow.document.write(html);
+        newWindow.document.close();
+    });
+}

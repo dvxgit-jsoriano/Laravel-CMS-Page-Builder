@@ -126,6 +126,35 @@ body {
     color: #444;
 }
 
+#sortable-list {
+    position: relative;
+    /* This makes the child absolutely positioned overlay relative to this div */
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* White with 70% opacity */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.loading-overlay.show {
+    display: flex;
+    /* Show when this class is added */
+}
+
+.loading-img {
+    width: 4rem;
+    height: 4rem;
+}
+
 /* Component List */
 .draggable-list {
     list-style: none;

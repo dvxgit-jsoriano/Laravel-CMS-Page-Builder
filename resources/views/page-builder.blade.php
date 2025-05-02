@@ -37,14 +37,13 @@
                 <h2 class="section-title">Page Layout</h2>
                 <div class="canvas-buttons">
                     <button class="btn-clear">Clear Data</button>
-                    <button class="btn-preview">Preview Page</button>
+                    <button class="btn-preview" onclick="openTab()">Preview Page</button>
                 </div>
             </div>
             <div id="sortable-list" class="canvas-content">
                 <!-- Blocks will be added here -->
-                <div id="loading-overlay"
-                    class="hidden absolute inset-0 bg-white bg-opacity-70 z-50 flex justify-center items-center">
-                    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." class="w-16 h-16">
+                <div id="loading-overlay" class="loading-overlay">
+                    <img src="{{ asset('assets/images/llF5iyg.gif') }}" class="loading-img">
                 </div>
             </div>
         </section>
