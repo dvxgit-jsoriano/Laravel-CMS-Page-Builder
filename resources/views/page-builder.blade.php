@@ -21,13 +21,13 @@
 
     <main class="builder-main">
         <aside class="builder-sidebar">
-            <h2 class="section-title">Components [{{ $template->name ?? 'Default Template' }}]</h2>
+            <h2 class="section-title">Components [Template: {{ $template->name ?? 'Default Template' }}]</h2>
             <div class="page-dropdown">
                 <h3 class="section-title">Page:</h3>
                 <select name="select-page" id="select-page" class="select-page">
                     @if (!empty($pages) && count($pages) > 0)
                         @foreach ($pages as $page)
-                            <option value="{{ $page->name ?? '' }}">{{ $page->name ?? '' }}</option>
+                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
                         @endforeach
                     @else
                         <option disabled>No pages available</option>
@@ -63,6 +63,27 @@
     </main>
 
     <script>
+        var globalPageId = 1;
+        var pageData;
+
+        $(document).ready(function() {
+            $("#select-page").on("change", function() {
+                // Do this....
+                globalPageId = $(this).val();
+                fetchPageData(globalPageId);
+                console.log(pageData);
+                $("#sortable-list").empty();
+                pageData.blocks.forEach(element => {
+                    //console.log(element);
+                    let blockHTML = getBlockTemplateFromServer(element);
+                    $("#sortable-list").append(blockHTML);
+
+                });
+            });
+        });
+    </script>
+
+    <script>
         const profileBtn = document.getElementById('profileBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -75,5 +96,36 @@
                 dropdownMenu.classList.remove('show');
             }
         });
+
+        function fetchPageData(page) {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('pageData', ['id' => ':id']) }}".replace(':id', page),
+                async: false,
+                success: function(response) {
+                    pageData = response;
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function createBlock(blockData) {
+            console.log("blockData", blockData);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('createBlock') }}",
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    pageId: globalPageId,
+                    blockData: blockData
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        }
     </script>
+
 @endsection

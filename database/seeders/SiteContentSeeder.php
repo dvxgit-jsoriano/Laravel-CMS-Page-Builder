@@ -87,6 +87,59 @@ class SiteContentSeeder extends Seeder
             ],
         ]);
 
+        // Create page
+        $page = DB::table('pages')->insertGetId([
+            'site_id' => $site,
+            'name' => 'tokio-hotel',
+            'is_landing_page' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // HERO block
+        $heroBlockId = DB::table('blocks')->insertGetId([
+            'page_id' => $page,
+            'type' => 'hero',
+            'position' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('block_fields')->insert([
+            [
+                'block_id' => $heroBlockId,
+                'field_key' => 'name',
+                'field_value' => 'Hero Block',
+                'field_type' => 'text',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'block_id' => $heroBlockId,
+                'field_key' => 'title',
+                'field_value' => 'Welcome to Our Site!',
+                'field_type' => 'text',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'block_id' => $heroBlockId,
+                'field_key' => 'sub_title',
+                'field_value' => 'A place to showcase your products.',
+                'field_type' => 'text',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'block_id' => $heroBlockId,
+                'field_key' => 'description',
+                'field_value' => 'This is a hero section with catchy text and an attractive image.',
+                'field_type' => 'textarea',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
         // BANNER block
         $bannerBlockId = DB::table('blocks')->insertGetId([
             'page_id' => $page,
