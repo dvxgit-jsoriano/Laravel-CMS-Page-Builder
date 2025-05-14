@@ -126,6 +126,22 @@ $(document).ready(function () {
             //document.getElementById('loading-overlay').classList.remove('show');
         }
     });
+
+    // Modal
+    $('#openModal').on('click', function () {
+        $('#createNewPageModal').show();
+    });
+
+    $('#modalCloseX, #modalCloseBtn').on('click', function () {
+        $('#createNewPageModal').hide();
+    });
+
+    // Prevent closing by clicking outside
+    $('#createNewPageModal').on('click', function (e) {
+        if ($(e.target).is('#createNewPageModal')) {
+            // Do nothing
+        }
+    });
 });
 
 /**

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Template;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -12,13 +13,13 @@ class SiteContentSeeder extends Seeder
     {
 
         // Create template
-        $template = DB::table('templates')->insert([
+        $template = Template::create([
             'name' => 'Default Template',
             'slug' => 'default-template',
             'desc' => 'This is the default template'
         ]);
 
-        $template = DB::table('templates')->insert([
+        $template = Template::create([
             'name' => 'Wicked Blocks',
             'slug' => 'wicked-blocks',
             'desc' => 'This is the wicked blocks template'
@@ -28,7 +29,7 @@ class SiteContentSeeder extends Seeder
         $site = DB::table('sites')->insertGetId([
             'user_id' => 1, // adjust based on existing user
             'name' => 'My Sample Site',
-            'template_name' => 'default-template',
+            'template_id' => $template->id,
             'active' => true,
             'created_at' => now(),
             'updated_at' => now(),

@@ -14,12 +14,17 @@ class MainController extends Controller
 {
     public function index()
     {
-        // Load the selected template...
-        $template = Template::where('name', 'Wicked Blocks')->first();
+        // Load the current site information and get its template.
+        $site = Site::where('active', true)->first();
+
+        // Load the selected active template...
+        $template = Template::where('id', $site->template_id)->first();
+
         // Load the pages under this site...
         $pages = Page::where('site_id', '1')->get();
+
         // Return the view page-builder
-        return view('page-builder', compact('template', 'pages'));
+        return view('page-builder', compact('site', 'template', 'pages'));
     }
 
     public function pages($siteId)
@@ -66,6 +71,14 @@ class MainController extends Controller
         return response()->json($page);
     }
 
+    public function createPage(Request $request)
+    {
+        $siteId = $request->siteId;
+        $pageName = $request->pageName;
+
+        Page::create([]);
+    }
+
     public function createBlock(Request $request)
     {
         $blockFields = [];
@@ -105,6 +118,17 @@ class MainController extends Controller
                         'field_type' => 'textarea',
                     ],
                 ];
+                break;
+            case 'navigation':
+                $blockFields = [
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'name',
+                        'field_value' => 'Hero Block',
+                        'field_type' => 'text',
+                    ]
+                ];
+
             default:
         }
 

@@ -21,7 +21,12 @@
 
     <main class="builder-main">
         <aside class="builder-sidebar">
-            <h2 class="section-title">Components [Template: {{ $template->name ?? 'Default Template' }}]</h2>
+            <h2 class="section-title">Components</h2>
+            <h2 class="section-title">Site: [{{ $site->id }}] [{{ $site->name }}]</h2>
+            <h2 class="section-title">Template: [{{ $template->id }}] [{{ $template->name }}]</h2>
+            <div class="canvas-buttons">
+                <button id="openModal" class="btn-new-page">Create New Page</button>
+            </div>
             <div class="page-dropdown">
                 <h3 class="section-title">Page:</h3>
                 <select name="select-page" id="select-page" class="select-page">
@@ -33,6 +38,26 @@
                         <option disabled>No pages available</option>
                     @endif
                 </select>
+            </div>
+
+            <!-- Create New Page modal -->
+            <div class="modal-overlay" id="createNewPageModal">
+                <div class="modal-box">
+                    <span class="modal-close-x" id="modalCloseX">&times;</span>
+                    <h2>Create a new page</h2>
+
+                    <div class="modal-body">
+                        <label for="pageName">Page
+                            Name</label>
+                        <input type="text" id="pageName" name="pageName" class="modal-input"
+                            placeholder="Enter a name of a page">
+                    </div>
+
+                    <div class="canvas-buttons">
+                        <button id="modalCreatePage" class="btn-create" onclick="createPage()">Create</button>
+                        <button id="modalCloseBtn" class="modal-close-btn">Close</button>
+                    </div>
+                </div>
             </div>
 
             <ul id="draggable-list" class="draggable-list">
@@ -62,7 +87,9 @@
         </section>
     </main>
 
+
     <script>
+        var globalTemplateId = {{ $template->id ?? 1 }};
         var globalPageId = 1;
         var pageData;
 
@@ -111,8 +138,25 @@
             });
         }
 
+        function createPage() {
+            let pageName = $("#pageName").val();
+
+            console.log("Creating new page...", pageName);
+
+            $.ajax({
+                type: "POST",
+                url: "url",
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    pageName: pageName,
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
         function createBlock(blockData) {
-            console.log("blockData", blockData);
             $.ajax({
                 type: "POST",
                 url: "{{ route('createBlock') }}",
