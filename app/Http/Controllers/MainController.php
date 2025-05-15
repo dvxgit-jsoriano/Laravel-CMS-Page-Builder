@@ -18,13 +18,13 @@ class MainController extends Controller
         $site = Site::where('active', true)->first();
 
         // Load the selected active template...
-        $template = Template::where('id', $site->template_id)->first();
+        //$template = Template::where('id', $site->template_id)->first();
 
         // Load the pages under this site...
-        $pages = Page::where('site_id', '1')->get();
+        //$pages = Page::where('site_id', '1')->get();
 
         // Return the view page-builder
-        return view('page-builder', compact('site', 'template', 'pages'));
+        return view('page-builder', compact('site'));
     }
 
     public function pages($siteId)
@@ -74,6 +74,16 @@ class MainController extends Controller
     public function fetchSites()
     {
         return Site::all();
+    }
+
+    public function getSiteInfo($siteId)
+    {
+        return Site::find($siteId);
+    }
+
+    public function fetchTemplates()
+    {
+        return Template::all();
     }
 
     public function createSite(Request $request)
