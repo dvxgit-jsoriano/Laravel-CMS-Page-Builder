@@ -172,6 +172,7 @@
             $.ajax({
                 type: "GET",
                 url: "{{ route('getSiteInfo', ['siteId' => ':siteId']) }}".replace(':siteId', siteId),
+                async: false,
                 success: function(response) {
                     globalTemplateId = response.template_id;
                 }
