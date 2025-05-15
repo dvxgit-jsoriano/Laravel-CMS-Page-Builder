@@ -120,7 +120,7 @@ body {
 
 /* Titles */
 .section-title {
-    font-size: .9rem;
+    font-size: 1rem;
     font-weight: bold;
     margin-bottom: .5rem;
     color: #444;
@@ -249,6 +249,13 @@ body {
     outline: none;
 }
 
+.select-primary {
+    flex: 1;
+    max-width: 200px;
+    padding: 5px;
+    border-radius: 0.25rem;
+}
+
 .page-dropdown {
     display: flex;
     align-items: center;
@@ -304,9 +311,18 @@ body {
     transform: scale(1.05);
 }
 
+.btn-primary {
+    background-color: #388a3b;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #388a3b;
+    transform: scale(1.05);
+}
+
 .btn-preview {
     background-color: #4caf50;
-    /* Green for Preview */
     color: #fff;
 }
 
@@ -319,6 +335,7 @@ body {
     background-color: #4caf50;
     /* Green for Preview */
     color: #fff;
+    width: 100%;
 }
 
 .btn-create:hover {

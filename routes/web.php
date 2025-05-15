@@ -17,3 +17,5 @@ Route::get('/page-builder', function () {
 Route::get('pages/{siteId}', [MainController::class, 'pages']);
 Route::get('page-data/{id}', [MainController::class, 'pageData'])->name('pageData');
 Route::post('create-block', [MainController::class, 'createBlock'])->name('createBlock');
+Route::get('get-sites', [MainController::class, 'fetchSites'])->name('getSites');
+Route::post('create-site', [MainController::class, 'createSite'])->name('createSite');

@@ -127,11 +127,6 @@ $(document).ready(function () {
         }
     });
 
-    // Modal
-    $('#openModal').on('click', function () {
-        $('#createNewPageModal').show();
-    });
-
     $('#modalCloseX, #modalCloseBtn').on('click', function () {
         $('#createNewPageModal').hide();
     });
@@ -273,4 +268,14 @@ function openTab() {
         newWindow.document.write(html);
         newWindow.document.close();
     });
+}
+
+function openModal(triggerEl) {
+    const target = $(triggerEl).data('target');
+    $('#' + target).show(); // or .fadeIn() if you want animation
+}
+
+function closeModal(triggerEl) {
+    const target = $(triggerEl).data('target');
+    $('#' + target).hide(); // or .fadeOut()
 }

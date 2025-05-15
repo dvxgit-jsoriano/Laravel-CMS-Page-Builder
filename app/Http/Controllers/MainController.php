@@ -71,6 +71,23 @@ class MainController extends Controller
         return response()->json($page);
     }
 
+    public function fetchSites()
+    {
+        return Site::all();
+    }
+
+    public function createSite(Request $request)
+    {
+        $site = Site::create([
+            'user_id' => 1,
+            'template_id' => null,
+            'name' => $request->siteName,
+            'active' => false,
+        ]);
+
+        return Site::all();
+    }
+
     public function createPage(Request $request)
     {
         $siteId = $request->siteId;

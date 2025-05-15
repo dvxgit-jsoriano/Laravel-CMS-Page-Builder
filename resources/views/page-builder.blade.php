@@ -22,14 +22,44 @@
     <main class="builder-main">
         <aside class="builder-sidebar">
             <h2 class="section-title">Components</h2>
-            <h2 class="section-title">Site: [{{ $site->id }}] [{{ $site->name }}]</h2>
-            <h2 class="section-title">Template: [{{ $template->id }}] [{{ $template->name }}]</h2>
+            {{-- <h2 class="section-title">Site: [{{ $site->id }}] [{{ $site->name }}]</h2> --}}
             <div class="canvas-buttons">
-                <button id="openModal" class="btn-new-page">Create New Page</button>
+                <button id="openSiteModal" class="btn-create" data-target="modalCreateNewSite"
+                    onclick="openModal(this)">Create New Site</button>
+            </div>
+
+            <div class="page-dropdown">
+                <h3 class="section-title">Site:</h3>
+                <select name="select-site" id="select-site" class="select-primary">
+                    @if (!empty($pages) && count($pages) > 0)
+                        @foreach ($pages as $page)
+                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
+                        @endforeach
+                    @else
+                        <option disabled>No pages available</option>
+                    @endif
+                </select>
+            </div>
+            {{-- <h2 class="section-title">Template: [{{ $template->id }}] [{{ $template->name }}]</h2> --}}
+            <div class="page-dropdown">
+                <h3 class="section-title">Template:</h3>
+                <select name="select-template" id="select-template" class="select-primary">
+                    <option selected disabled>--Select Template--</option>
+                    @if (!empty($pages) && count($pages) > 0)
+                        @foreach ($pages as $page)
+                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
+                        @endforeach
+                    @else
+                        <option disabled>No pages available</option>
+                    @endif
+                </select>
+            </div>
+            <div class="canvas-buttons">
+                <button id="openPageModal" class="btn-create">Create New Page</button>
             </div>
             <div class="page-dropdown">
                 <h3 class="section-title">Page:</h3>
-                <select name="select-page" id="select-page" class="select-page">
+                <select name="select-page" id="select-page" class="select-primary">
                     @if (!empty($pages) && count($pages) > 0)
                         @foreach ($pages as $page)
                             <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
@@ -54,7 +84,7 @@
                     </div>
 
                     <div class="canvas-buttons">
-                        <button id="modalCreatePage" class="btn-create" onclick="createPage()">Create</button>
+                        <button id="modalCreatePage" class="btn-primary" onclick="createPage()">Create</button>
                         <button id="modalCloseBtn" class="modal-close-btn">Close</button>
                     </div>
                 </div>
@@ -87,13 +117,61 @@
         </section>
     </main>
 
+    <!-- ********************************************************************* -->
+    <!-- Create your modals here -->
+    <!-- ********************************************************************* -->
+    <!-- Create New Site modal -->
+    <div id="modalCreateNewSite" class="modal-overlay">
+        <div class="modal-box">
+            <span class="modal-close-x" data-target="modalCreateNewSite" onclick="closeModal(this)">&times;</span>
+            <h2>Create a new site</h2>
+
+            <div class="modal-body">
+                <label for="siteName">Site
+                    Name</label>
+                <input type="text" id="siteName" name="siteName" class="modal-input"
+                    placeholder="Enter a name of a site">
+            </div>
+
+            <div class="canvas-buttons">
+                <button class="btn-primary" onclick="createSite()">Create</button>
+                <button class="modal-close-btn" data-target="modalCreateNewSite"
+                    onclick="closeModal(this)">Close</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
+        /**
+         * Global Variables
+         */
+        var globalSite;
         var globalTemplateId = {{ $template->id ?? 1 }};
-        var globalPageId = 1;
+        var globalPageId;
         var pageData;
 
+        function fetchSites() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('getSites') }}",
+                async: false,
+                success: function(response) {
+                    loadSites(response);
+                },
+                error: function(response) {
+                    console.error(response);
+                },
+                complete: function() {}
+            });
+        }
+
         $(document).ready(function() {
+            $("#select-site").on("change", function() {
+                globalSite = $(this).val();
+                console.log("globalSite", globalSite);
+            });
+
             $("#select-page").on("change", function() {
                 // Do this....
                 globalPageId = $(this).val();
@@ -138,6 +216,42 @@
             });
         }
 
+        function loadSites(data) {
+            let sel = false;
+            $("#select-site").empty();
+            $.each(data, function(index, el) {
+                if (el.active) {
+                    sel = "selected";
+                    globalSite = el.id; // Set the globalSite to the active site.
+                } else {
+                    sel = "";
+                }
+                $("#select-site").append(
+                    `<option value="${el.id}" ${sel}>${el.name}</option>`
+                );
+            });
+        }
+
+        function createSite() {
+            let siteName = $('#siteName').val();
+
+            console.log("Createing new site...", siteName);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('createSite') }}",
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    siteName: siteName,
+                },
+                success: function(response) {
+                    console.log(response);
+                    loadSites(response)
+                }
+            });
+
+        }
+
         function createPage() {
             let pageName = $("#pageName").val();
 
@@ -170,6 +284,15 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        /**
+         * Initializations
+         */
+        fetchSites();
+        console.log("Initialization");
+        console.log("Site", globalSite);
     </script>
 
 @endsection
