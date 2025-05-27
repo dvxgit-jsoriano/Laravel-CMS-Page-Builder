@@ -29,7 +29,6 @@ class SiteContentSeeder extends Seeder
         $site = DB::table('sites')->insertGetId([
             'user_id' => 1, // adjust based on existing user
             'name' => 'My Sample Site',
-            'template_id' => $template->id,
             'active' => true,
             'created_at' => now(),
             'updated_at' => now(),
@@ -39,6 +38,7 @@ class SiteContentSeeder extends Seeder
         $page = DB::table('pages')->insertGetId([
             'site_id' => $site,
             'name' => 'slug-page-name',
+            'template_id' => $template->id,
             'is_landing_page' => true,
             'created_at' => now(),
             'updated_at' => now(),
@@ -92,6 +92,7 @@ class SiteContentSeeder extends Seeder
         $page = DB::table('pages')->insertGetId([
             'site_id' => $site,
             'name' => 'tokio-hotel',
+            'template_id' => $template->id,
             'is_landing_page' => false,
             'created_at' => now(),
             'updated_at' => now(),

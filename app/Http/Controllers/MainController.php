@@ -11,13 +11,15 @@ use App\Models\Site;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class MainController extends Controller
 {
     public function index()
     {
         // Load the current site information and get its template.
-        $site = Site::where('active', true)->first();
+        $sites = Site::all();
+        //$site = Site::where('active', true)->first();
 
         // Load the selected active template...
         //$template = Template::where('id', $site->template_id)->first();
@@ -25,8 +27,55 @@ class MainController extends Controller
         // Load the pages under this site...
         //$pages = Page::where('site_id', '1')->get();
 
-        // Return the view page-builder
-        return view('page-builder', compact('site'));
+        $templates = Template::all();
+
+        // Return the view page-setup
+        return view('page-setup', compact('sites', 'templates'));
+    }
+
+    public function process_builder(Request $request)
+    {
+        $siteName = $request->new_site;
+        $siteId = $request->existing_site;
+        $templateId = $request->template_id;
+
+        if (!empty($siteName)) {
+            // Create site
+            $site = Site::create([
+                'user_id' => 1,
+                'name' => $siteName,
+                'active' => false,
+            ]);
+        } else {
+            // Use existing site
+            $site = Site::findOrFail($siteId);
+        }
+
+        $template = Template::findOrFail($templateId);
+
+        // Store in session
+        session([
+            'page_builder.site_id' => $site->id,
+            'page_builder.template_id' => $template->id,
+        ]);
+
+        //return view('page-builder', compact('site', 'template'));
+        return redirect()->route('page-builder');
+    }
+
+    public function index_builder()
+    {
+        $siteId = session('page_builder.site_id');
+        $templateId = session('page_builder.template_id');
+
+        if (!$siteId || !$templateId) {
+            abort(404, 'Site or template not found in session.');
+        }
+
+        $site = Site::findOrFail($siteId);
+        $template = Template::findOrFail($templateId);
+
+        return view('page-builder', compact('site', 'template'));
     }
 
     public function pages($siteId)
@@ -92,7 +141,6 @@ class MainController extends Controller
     {
         $site = Site::create([
             'user_id' => 1,
-            'template_id' => null,
             'name' => $request->siteName,
             'active' => false,
         ]);
@@ -104,6 +152,7 @@ class MainController extends Controller
     {
         $siteId = $request->siteId;
         $pageName = $request->pageName;
+        $templateId = $request->templateId;
         $isLandingPage = false;
 
         $pageCount = Page::where('site_id', $siteId)->count();
@@ -112,6 +161,7 @@ class MainController extends Controller
 
         Page::create([
             'site_id' => $siteId,
+            'template_id' => $templateId,
             'name' => $pageName,
             'is_landing_page' => $isLandingPage
         ]);
@@ -180,9 +230,10 @@ class MainController extends Controller
         };
     }
 
-    public function getPages($siteId)
+    public function getPages($siteId, Request $request)
     {
-        return Page::where('site_id', $siteId)->get();
+        $templateId = $request->templateId;
+        return Page::where('site_id', $siteId)->where('template_id', $templateId)->get();
     }
 
     public function setTemplateToSite(Request $request)

@@ -10,9 +10,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::get('/page-builder', function () {
-    return view('page-builder');
+Route::get('/page-setup', function () {
+    return view('page-setup');
 });
+
+Route::get('page-builder', [MainController::class, 'index_builder'])->name('page-builder');
+Route::post('process-builder', [MainController::class, 'process_builder'])->name('process-builder');
 
 Route::get('pages/{siteId}', [MainController::class, 'pages']);
 Route::get('page-data/{id}', [MainController::class, 'pageData'])->name('pageData');

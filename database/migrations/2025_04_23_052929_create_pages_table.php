@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('site_id')->constrained();
+            $table->foreignId('template_id')->nullable()->constrained();
             $table->string('name');
             $table->boolean('is_landing_page')->default(false);
             $table->timestamps();

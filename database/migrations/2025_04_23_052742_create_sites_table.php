@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('template_id')->nullable()->constrained();
             $table->string('name');
             $table->boolean('active')->default(false);
             $table->timestamps();

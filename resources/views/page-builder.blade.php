@@ -21,39 +21,10 @@
 
     <main class="builder-main">
         <aside class="builder-sidebar">
-            {{-- <h2 class="section-title">Site: [{{ $site->id }}] [{{ $site->name }}]</h2> --}}
-            <div class="canvas-buttons">
-                <button id="openSiteModal" class="btn-create" data-target="modalCreateNewSite"
-                    onclick="openModal(this)">Create New Site</button>
-            </div>
+            <h2 class="section-title">Site: [{{ $site->id }}] [{{ $site->name }}]</h2>
+            <h2 class="section-title">Sessions: [{{ session('page_builder.site_id') }}]
+                [{{ session('page_builder.template_id') }}]</h2>
 
-            <div class="page-dropdown">
-                <h3 class="section-title">Site:</h3>
-                <select name="select-site" id="select-site" class="select-primary">
-                    <option selected disabled>--Select Template--</option>
-                    @if (!empty($pages) && count($pages) > 0)
-                        @foreach ($pages as $page)
-                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
-                        @endforeach
-                    @else
-                        <option disabled>No pages available</option>
-                    @endif
-                </select>
-            </div>
-            {{-- <h2 class="section-title">Template: [{{ $template->id }}] [{{ $template->name }}]</h2> --}}
-            <div class="page-dropdown">
-                <h3 class="section-title">Template:</h3>
-                <select name="select-template" id="select-template" class="select-primary">
-                    <option selected disabled>--Select Template--</option>
-                    @if (!empty($pages) && count($pages) > 0)
-                        @foreach ($pages as $page)
-                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
-                        @endforeach
-                    @else
-                        <option disabled>No pages available</option>
-                    @endif
-                </select>
-            </div>
             <div class="canvas-buttons">
                 <button id="openPageModal" class="btn-create" data-target="modalCreateNewPage"
                     onclick="openModal(this);">Create New Page</button>
@@ -137,8 +108,7 @@
 
             <div class="canvas-buttons">
                 <button class="btn-primary" data-target="modalCreateNewPage" onclick="createPage(this)">Create</button>
-                <button class="modal-close-btn" data-target="modalCreateNewPage"
-                    onclick="closeModal(this)">Close</button>
+                <button class="modal-close-btn" data-target="modalCreateNewPage" onclick="closeModal(this)">Close</button>
             </div>
         </div>
     </div>
@@ -148,26 +118,16 @@
         /**
          * Global Variables
          */
-        var globalSite;
-        var globalTemplateId;
+        var globalSite = @json($site->id);
+        var globalSiteId = @json($site->id);
+        var globalTemplates;
+        var globalTemplateId = @json($template->id);
+        var globalTemplateName = @json($template->name);
         var globalPageId;
         var pageData;
         var previousTemplateId;
 
-        function fetchSites() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getSites') }}",
-                async: false,
-                success: function(response) {
-                    loadSites(response);
-                },
-                error: function(response) {
-                    console.error(response);
-                },
-                complete: function() {}
-            });
-        }
+        console.log(globalSite);
 
         function getSiteInfo() {
             siteId = $("#select-site").val();
@@ -187,46 +147,14 @@
         }
 
         $(document).ready(function() {
-            $("#select-site").on("change", function() {
-                globalSite = $(this).val();
-                console.log("globalSite", globalSite);
-
-                getSiteInfo();
-                $('#select-template').val(globalTemplateId);
-
-                // Clear the contents of sortable-list
-                $('#sortable-list').children().not('.loading-overlay').remove();
-
-                loadPages();
-            });
-
-            $("#select-template").on("focus", function() {
-                previousTemplateId = $(this).val(); // store value on focus
-            });
-
-            $("#select-template").on("change", function() {
-                let newTemplateId = $(this).val();
-
-                if (!confirm(
-                        'WARNING: Are you sure you want to change the template? This will clear all previous pages you already created.'
-                    )) {
-                    $(this).val(previousTemplateId);
-                    return;
-                }
-
-                globalTemplateId = newTemplateId;
-                console.log("Selected template", globalTemplateId);
-
-                // Set the template to the site, clear all pages and contents.
-
-
-            });
+            globalSite = {{ $site->id }};
+            globalSiteId = {{ $site->id }};
 
             $("#select-page").on("change", function() {
                 // Do this....
                 globalPageId = $(this).val();
                 fetchPageData(globalPageId);
-                console.log(pageData);
+
                 $("#sortable-list").empty();
                 pageData.blocks.forEach(element => {
                     //console.log(element);
@@ -265,58 +193,13 @@
             });
         }
 
-        function loadSites(data) {
-            let sel = false;
-            // Empty the rest of the contents...
-            $("#select-site").empty();
-            $('#select-site').append(
-                `<option selected disabled>--Select Template--</option>`
-            );
-            $.each(data, function(index, el) {
-                if (el.active) {
-                    sel = "selected";
-                    globalSite = el.id; // Set the globalSite to the active site.
-                    globalTemplateId = el.template_id;
-                    console.log("GLOBAL TEMPLATE ID", globalTemplateId);
-
-                    $("#select-template").val(globalTemplateId);
-                } else {
-                    sel = "";
-                }
-
-                $("#select-site").append(
-                    `<option value="${el.id}" ${sel}>${el.name}</option>`
-                );
-            });
-        }
-
-        function loadTemplates() {
-            // Empty the rest of the contents...
-            $("#select-template").empty();
-
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getTemplates') }}",
-                async: false,
-                success: function(response) {
-                    console.log(response);
-                    $("#select-template").empty();
-                    $("#select-template").append(
-                        `<option value="" disabled selected>--Select Template--</option>`
-                    );
-                    $.each(response, function(index, el) {
-                        $("#select-template").append(
-                            `<option value="${el.id}">${el.name}</option>`
-                        );
-                    });
-                }
-            });
-        }
-
         function loadPages() {
             $.ajax({
                 type: "GET",
                 url: "{{ route('getPages', ['siteId' => ':siteId']) }}".replace(':siteId', globalSite),
+                data: {
+                    templateId: globalTemplateId
+                },
                 success: function(response) {
                     console.log(response);
 
@@ -336,32 +219,6 @@
             });
         }
 
-        function createSite(triggerEl) {
-            let siteName = $('#siteName').val();
-
-            console.log("Creating new site...", siteName);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('createSite') }}",
-                data: {
-                    _token: '{{ csrf_token() }}', // CSRF token added here
-                    siteName: siteName,
-                },
-                success: function(response) {
-                    console.log(response);
-                    loadSites(response);
-                    // Clear the contents of sortable-list
-                    $('#sortable-list').children().not('.loading-overlay').remove();
-                    // Set selection to first disabled option
-                    $('#select-site').prop('selectedIndex', 0);
-                    $('#select-template').prop('selectedIndex', 0);
-                    //alert("Site has been created!");
-                    closeModal(triggerEl);
-                }
-            });
-        }
-
         function createPage(triggerEl) {
             let pageName = $("#pageName").val();
 
@@ -374,9 +231,14 @@
                     _token: '{{ csrf_token() }}', // CSRF token added here
                     siteId: globalSite,
                     pageName: pageName,
+                    templateId: globalTemplateId,
                 },
                 success: function(response) {
                     console.log(response);
+
+                    loadPages();
+
+                    closeModal(triggerEl);
                 }
             });
         }
@@ -401,10 +263,7 @@
         /**
          * Initializations
          */
-        fetchSites();
-        loadTemplates();
-        getSiteInfo();
+        loadPages();
         console.log("Initialization");
     </script>
-
 @endsection

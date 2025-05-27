@@ -16,6 +16,10 @@
 
     <!-- Dynamically load assets depending on the template selected... -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    @stack('styles')
+
+    @stack('scripts')
 </head>
 
 <body>
