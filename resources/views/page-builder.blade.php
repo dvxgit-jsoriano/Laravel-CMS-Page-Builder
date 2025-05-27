@@ -30,6 +30,7 @@
             <div class="page-dropdown">
                 <h3 class="section-title">Site:</h3>
                 <select name="select-site" id="select-site" class="select-primary">
+                    <option selected disabled>--Select Template--</option>
                     @if (!empty($pages) && count($pages) > 0)
                         @foreach ($pages as $page)
                             <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
@@ -54,7 +55,8 @@
                 </select>
             </div>
             <div class="canvas-buttons">
-                <button id="openPageModal" class="btn-create">Create New Page</button>
+                <button id="openPageModal" class="btn-create" data-target="modalCreateNewPage"
+                    onclick="openModal(this);">Create New Page</button>
             </div>
             <div class="page-dropdown">
                 <h3 class="section-title">Page:</h3>
@@ -67,26 +69,6 @@
                         <option disabled>No pages available</option>
                     @endif --}}
                 </select>
-            </div>
-
-            <!-- Create New Page modal -->
-            <div class="modal-overlay" id="createNewPageModal">
-                <div class="modal-box">
-                    <span class="modal-close-x" id="modalCloseX">&times;</span>
-                    <h2>Create a new page</h2>
-
-                    <div class="modal-body">
-                        <label for="pageName">Page
-                            Name</label>
-                        <input type="text" id="pageName" name="pageName" class="modal-input"
-                            placeholder="Enter a name of a page">
-                    </div>
-
-                    <div class="canvas-buttons">
-                        <button id="modalCreatePage" class="btn-primary" onclick="createPage()">Create</button>
-                        <button id="modalCloseBtn" class="modal-close-btn">Close</button>
-                    </div>
-                </div>
             </div>
 
             <h2 class="section-title">Components:</h2>
@@ -135,7 +117,27 @@
 
             <div class="canvas-buttons">
                 <button class="btn-primary" data-target="modalCreateNewSite" onclick="createSite(this)">Create</button>
-                <button class="modal-close-btn" data-target="modalCreateNewSite"
+                <button class="modal-close-btn" data-target="modalCreateNewSite" onclick="closeModal(this)">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create New Page modal -->
+    <div id="modalCreateNewPage" class="modal-overlay">
+        <div class="modal-box">
+            <span class="modal-close-x" data-target="modalCreateNewPage" onclick="closeModal(this)">&times;</span>
+            <h2>Create a new page</h2>
+
+            <div class="modal-body">
+                <label for="pageName">Page
+                    Name</label>
+                <input type="text" id="pageName" name="pageName" class="modal-input"
+                    placeholder="Enter a name of the page">
+            </div>
+
+            <div class="canvas-buttons">
+                <button class="btn-primary" data-target="modalCreateNewPage" onclick="createPage(this)">Create</button>
+                <button class="modal-close-btn" data-target="modalCreateNewPage"
                     onclick="closeModal(this)">Close</button>
             </div>
         </div>
@@ -150,6 +152,7 @@
         var globalTemplateId;
         var globalPageId;
         var pageData;
+        var previousTemplateId;
 
         function fetchSites() {
             $.ajax({
@@ -175,8 +178,12 @@
                 async: false,
                 success: function(response) {
                     globalTemplateId = response.template_id;
+                    console.log("Global Template ID:", globalTemplateId);
+                    $('#select-template').val(globalTemplateId);
                 }
             });
+
+            loadPages();
         }
 
         $(document).ready(function() {
@@ -184,22 +191,35 @@
                 globalSite = $(this).val();
                 console.log("globalSite", globalSite);
 
+                getSiteInfo();
+                $('#select-template').val(globalTemplateId);
 
-                /* $.ajax({
-                    type: "GET",
-                    url: "#",
-                    async: false,
-                    data: "data",
-                    success: function(response) {
-                        console.log(response);
-                    }
-                }); */
+                // Clear the contents of sortable-list
+                $('#sortable-list').children().not('.loading-overlay').remove();
 
+                loadPages();
+            });
+
+            $("#select-template").on("focus", function() {
+                previousTemplateId = $(this).val(); // store value on focus
             });
 
             $("#select-template").on("change", function() {
-                globalTemplateId = $(this).val();
-                console.log("Selecting Templates", globalTemplateId);
+                let newTemplateId = $(this).val();
+
+                if (!confirm(
+                        'WARNING: Are you sure you want to change the template? This will clear all previous pages you already created.'
+                    )) {
+                    $(this).val(previousTemplateId);
+                    return;
+                }
+
+                globalTemplateId = newTemplateId;
+                console.log("Selected template", globalTemplateId);
+
+                // Set the template to the site, clear all pages and contents.
+
+
             });
 
             $("#select-page").on("change", function() {
@@ -212,7 +232,6 @@
                     //console.log(element);
                     let blockHTML = getBlockTemplateFromServer(element);
                     $("#sortable-list").append(blockHTML);
-
                 });
             });
         });
@@ -250,6 +269,9 @@
             let sel = false;
             // Empty the rest of the contents...
             $("#select-site").empty();
+            $('#select-site').append(
+                `<option selected disabled>--Select Template--</option>`
+            );
             $.each(data, function(index, el) {
                 if (el.active) {
                     sel = "selected";
@@ -291,6 +313,29 @@
             });
         }
 
+        function loadPages() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('getPages', ['siteId' => ':siteId']) }}".replace(':siteId', globalSite),
+                success: function(response) {
+                    console.log(response);
+
+                    $('#select-page').empty();
+                    $('#select-page').append(
+                        `<option selected disabled>--Select Page--</option>`
+                    );
+
+                    $.each(response, function(index, el) {
+                        console.log(el);
+
+                        $("#select-page").append(
+                            `<option value="${el.id}">${el.name}</option>`
+                        );
+                    });
+                }
+            });
+        }
+
         function createSite(triggerEl) {
             let siteName = $('#siteName').val();
 
@@ -306,21 +351,28 @@
                 success: function(response) {
                     console.log(response);
                     loadSites(response);
+                    // Clear the contents of sortable-list
+                    $('#sortable-list').children().not('.loading-overlay').remove();
+                    // Set selection to first disabled option
+                    $('#select-site').prop('selectedIndex', 0);
+                    $('#select-template').prop('selectedIndex', 0);
+                    //alert("Site has been created!");
                     closeModal(triggerEl);
                 }
             });
         }
 
-        function createPage() {
+        function createPage(triggerEl) {
             let pageName = $("#pageName").val();
 
             console.log("Creating new page...", pageName);
 
             $.ajax({
                 type: "POST",
-                url: "url",
+                url: "{{ route('createPage') }}",
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
+                    siteId: globalSite,
                     pageName: pageName,
                 },
                 success: function(response) {
@@ -353,7 +405,6 @@
         loadTemplates();
         getSiteInfo();
         console.log("Initialization");
-        console.log("Site", globalSite);
     </script>
 
 @endsection

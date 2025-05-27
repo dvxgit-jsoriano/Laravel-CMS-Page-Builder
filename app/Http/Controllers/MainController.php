@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Block;
 use App\Models\BlockField;
+use App\Models\BlockFieldGroup;
+use App\Models\BlockFieldGroupItem;
 use App\Models\Page;
 use App\Models\Site;
 use App\Models\Template;
@@ -102,8 +104,17 @@ class MainController extends Controller
     {
         $siteId = $request->siteId;
         $pageName = $request->pageName;
+        $isLandingPage = false;
 
-        Page::create([]);
+        $pageCount = Page::where('site_id', $siteId)->count();
+
+        if ($pageCount == 0) $isLandingPage = true;
+
+        Page::create([
+            'site_id' => $siteId,
+            'name' => $pageName,
+            'is_landing_page' => $isLandingPage
+        ]);
     }
 
     public function createBlock(Request $request)
@@ -167,5 +178,34 @@ class MainController extends Controller
                 'field_type' => $field['field_type'],
             ]);
         };
+    }
+
+    public function getPages($siteId)
+    {
+        return Page::where('site_id', $siteId)->get();
+    }
+
+    public function setTemplateToSite(Request $request)
+    {
+        $siteId = $request->siteId;
+        $templateId = $request->templateId;
+
+        // Clear all page contents first.
+        Page::where('site_id', $siteId)->delete();
+        /* $page = Page::where('site_id', $siteId)->first();
+
+        $blocks = Block::where('page_id', $page->id)->get();
+
+        $blockFields = BlockField::where('block_id', $blocks->id)->get();
+
+        $blockFieldGroups = BlockFieldGroup::where('block_field_id', $blockFields->id)->get();
+
+        $blockFieldGroupItems = BlockFieldGroupItem::where('block_field_group_id', $blockFieldGroups->id)->get();
+ */
+        // Set the selected template
+        Site::where('site_id', $siteId)
+            ->update([
+                'template_id' => $templateId
+            ]);
     }
 }
