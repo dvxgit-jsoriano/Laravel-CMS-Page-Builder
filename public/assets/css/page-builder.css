@@ -197,6 +197,11 @@ body {
     border-radius: 8px;
 }
 
+.modal-body .modal-field-group {
+    margin-bottom: 1rem;
+    /* or any spacing you prefer */
+}
+
 .modal-box h2 {
     font-weight: bold;
 }

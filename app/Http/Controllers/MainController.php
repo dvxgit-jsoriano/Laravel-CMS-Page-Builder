@@ -39,35 +39,38 @@ class MainController extends Controller
         $siteId = $request->existing_site;
         $templateId = $request->template_id;
 
+        // Check if the site name input is not empty
         if (!empty($siteName)) {
-            // Create site
+            // Create the site
             $site = Site::create([
                 'user_id' => 1,
                 'name' => $siteName,
                 'active' => false,
             ]);
         } else {
-            // Use existing site
+            // Use the existing site
             $site = Site::findOrFail($siteId);
         }
 
         $template = Template::findOrFail($templateId);
 
-        // Store in session
+        // Store in page builder sessions to handle page GET and POST
         session([
             'page_builder.site_id' => $site->id,
             'page_builder.template_id' => $template->id,
         ]);
 
-        //return view('page-builder', compact('site', 'template'));
+        // Redirect to page-builder page
         return redirect()->route('page-builder');
     }
 
     public function index_builder()
     {
+        // Get the current session if existing and valid
         $siteId = session('page_builder.site_id');
         $templateId = session('page_builder.template_id');
 
+        // Abort process if there is no siteId or templateId
         if (!$siteId || !$templateId) {
             abort(404, 'Site or template not found in session.');
         }
@@ -252,11 +255,49 @@ class MainController extends Controller
         $blockFieldGroups = BlockFieldGroup::where('block_field_id', $blockFields->id)->get();
 
         $blockFieldGroupItems = BlockFieldGroupItem::where('block_field_group_id', $blockFieldGroups->id)->get();
- */
+        */
         // Set the selected template
         Site::where('site_id', $siteId)
             ->update([
                 'template_id' => $templateId
             ]);
+    }
+
+    public function getBlockSet(Request $request)
+    {
+        $blockId = $request->blockId;
+
+        $block = Block::with([
+            'block_fields',
+            'block_field_groups.block_field_group_items'
+        ])->findOrFail($blockId);
+
+        $data = [
+            'page_id' => $block->page_id,
+            'type' => $block->type,
+            'position' => $block->position,
+            'block_fields' => $block->block_fields->map(function ($field) {
+                return [
+                    'field_key' => $field->field_key,
+                    'field_value' => $field->field_value,
+                    'field_type' => $field->field_type,
+                ];
+            }),
+            'block_field_groups' => $block->block_field_groups->map(function ($group) {
+                return [
+                    'group_name' => $group->group_name,
+                    'items' => $group->block_field_group_items->map(function ($item) {
+                        return [
+                            'field_name' => $item->field_name,
+                            'field_value' => $item->field_value,
+                            'field_type' => $item->field_type,
+                            'position' => $item->position,
+                        ];
+                    }),
+                ];
+            }),
+        ];
+
+        return response()->json($data);
     }
 }

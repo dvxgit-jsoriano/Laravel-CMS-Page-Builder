@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('blocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('page_id')->constrained()->onDelete('cascade');
+            $table->string('name')->default('');
             $table->string('type')->default('');        // navigation, hero, banner, pricing, testimonials, footer.
             $table->integer('position')->default(0);        // for sorting.
             $table->timestamps();

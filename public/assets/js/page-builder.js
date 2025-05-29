@@ -16,14 +16,17 @@ $(document).ready(function () {
         animation: 150,
         sort: true,
         onAdd: function (evt) {
+
+            console.log("EVT", evt);
+
+            // Show loading overlay at the start of event.
+            $('#loading-overlay').addClass('show');
+
             // Get block type BEFORE removing the item
             const type = evt.item.dataset.blockType;
 
             // Now safely remove the item
             evt.item.remove();
-
-            // Show loading (optional)
-            //$('#loading-overlay').addClass('show');
 
             const response = {
                 "id": 2,
@@ -80,61 +83,10 @@ $(document).ready(function () {
 
             evt.to.appendChild(wrapper.firstElementChild);
 
-            //showLoadingOverlay(1000); // Show for 1 second
-            $('#loading-overlay').removeClass('show');
-
-            //fetchPageData(1);
-
             createBlock(blockData);
 
-
-
-            // AJAX to server to create block
-            /* $.ajax({
-                url: 'create-block.php',
-                method: 'POST',
-                data: { type: type },
-                success: function (response) {
-                    console.log("Server response:", response);
-
-                    try {
-                        const blockData = response;
-                        console.log(blockData);
-
-                        const blockHTML = getBlockTemplateFromServer(blockData);
-
-                        const wrapper = document.createElement('div');
-                        wrapper.innerHTML = blockHTML;
-
-                        // Remove loading before adding the block
-                        loading.remove();
-
-                        evt.to.appendChild(wrapper.firstElementChild);
-                    } catch (err) {
-                        console.error("Error parsing server response:", err);
-                        loading.remove(); // Important in case of error too
-                        alert("Failed to create block.");
-                    }
-                },
-                error: function () {
-                    loading.remove();
-                    alert("Server error while creating block.");
-                }
-            }); */
-
-            // Remove loading before adding the block
-            //document.getElementById('loading-overlay').classList.remove('show');
-        }
-    });
-
-    $('#modalCloseX, #modalCloseBtn').on('click', function () {
-        $('#createNewPageModal').hide();
-    });
-
-    // Prevent closing by clicking outside
-    $('#createNewPageModal').on('click', function (e) {
-        if ($(e.target).is('#createNewPageModal')) {
-            // Do nothing
+            // Remove loading at the end of this event.
+            $('#loading-overlay').removeClass('show');
         }
     });
 });
@@ -148,9 +100,8 @@ function getBlockTemplateFromServer(blockData) {
         case 'hero':
             return `
                 <section data-id="${blockData.id}" class="group relative">
-                    <button class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn">
-                        Edit
-                    </button>
+                    <button class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn"
+                        data-target="modalEditBlock" data-id="${blockData.id}" onclick="openEditModal(this)">Edit</button>
                     <div class="p-6 bg-blue-100 rounded shadow">
                         <h1 class="text-2xl font-bold mb-2">${escapeHtml(blockData.block_fields[1].field_value)}</h1>
                         <p class="text-gray-700">${escapeHtml(blockData.block_fields[3].field_value)}</p>
@@ -218,28 +169,6 @@ function escapeHtml(str) {
     });
 }
 
-function showLoadingOverlay(duration = 1000) {
-    const $loadingOverlay = $('#loading-overlay');
-    /* $loadingOverlay
-        .addClass('show')      // Ensures proper layout (e.g., flex)
-        .fadeIn(200, function () {
-            setTimeout(() => {
-                $(this).fadeOut(200, function () {
-                    $(this).removeClass('show'); // Clean up after fade
-                });
-            }, duration);
-        }); */
-
-    // Show loading overlay
-    $loadingOverlay.addClass('show');
-
-    // For demo, added delay of 1 second
-    setTimeout(() => {
-        // Hide loading overlay
-        $loadingOverlay.removeClass('show');
-    }, duration);
-}
-
 function openTab() {
     // Clone the layout content using jQuery
     const $clonedLayout = $('#sortable-list').clone();
@@ -269,6 +198,9 @@ function openTab() {
         newWindow.document.close();
     });
 }
+
+
+
 
 function openModal(triggerEl) {
     const target = $(triggerEl).data('target');

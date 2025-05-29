@@ -37,13 +37,15 @@ class SiteContentSeeder extends Seeder
         // Create page
         $page = DB::table('pages')->insertGetId([
             'site_id' => $site,
-            'name' => 'slug-page-name',
+            'name' => 'Slug Page Name',
+            'slug' => 'slug-page-name',
             'template_id' => $template->id,
             'is_landing_page' => true,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
+        /*
         // HERO block
         $heroBlockId = DB::table('blocks')->insertGetId([
             'page_id' => $page,
@@ -91,7 +93,8 @@ class SiteContentSeeder extends Seeder
         // Create page
         $page = DB::table('pages')->insertGetId([
             'site_id' => $site,
-            'name' => 'tokio-hotel',
+            'name' => 'Tokio Hotel',
+            'slug' => 'tokio-hotel',
             'template_id' => $template->id,
             'is_landing_page' => false,
             'created_at' => now(),
@@ -218,6 +221,6 @@ class SiteContentSeeder extends Seeder
             }
         }
 
-        DB::table('block_field_group_items')->insert($groupItems);
+        DB::table('block_field_group_items')->insert($groupItems); */
     }
 }

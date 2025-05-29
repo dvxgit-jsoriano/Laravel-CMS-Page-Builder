@@ -17,4 +17,9 @@ class Block extends Model
     {
         return $this->hasMany(BlockField::class);
     }
+
+    public function block_field_groups()
+    {
+        return $this->hasMany(BlockFieldGroup::class);
+    }
 }

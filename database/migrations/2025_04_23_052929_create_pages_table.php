@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('site_id')->constrained();
             $table->foreignId('template_id')->nullable()->constrained();
             $table->string('name');
+            $table->string('slug');
             $table->boolean('is_landing_page')->default(false);
             $table->timestamps();
         });

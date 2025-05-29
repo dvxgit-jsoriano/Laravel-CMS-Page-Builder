@@ -27,3 +27,5 @@ Route::get('get-templates', [MainController::class, 'fetchTemplates'])->name('ge
 Route::get('get-pages/{siteId}', [MainController::class, 'getPages'])->name('getPages');
 Route::post('create-page', [MainController::class, 'createPage'])->name('createPage');
 Route::post('set-template-to-site', [MainController::class, 'setTemplateToSite'])->name('setTemplateToSite');
+
+Route::get('get-block-set', [MainController::class, 'getBlockSet'])->name('getBlockSet');

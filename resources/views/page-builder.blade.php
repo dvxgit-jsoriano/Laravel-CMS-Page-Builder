@@ -32,13 +32,7 @@
             <div class="page-dropdown">
                 <h3 class="section-title">Page:</h3>
                 <select name="select-page" id="select-page" class="select-primary">
-                    {{-- @if (!empty($pages) && count($pages) > 0)
-                        @foreach ($pages as $page)
-                            <option value="{{ $page->id ?? '' }}">{{ $page->name ?? '' }}</option>
-                        @endforeach
-                    @else
-                        <option disabled>No pages available</option>
-                    @endif --}}
+                    <!-- Load options here... -->
                 </select>
             </div>
 
@@ -66,6 +60,10 @@
                 <div id="loading-overlay" class="loading-overlay">
                     <img src="{{ asset('assets/images/llF5iyg.gif') }}" class="loading-img">
                 </div>
+            </div>
+            <div>
+                <textarea id="txtDisplay" rows="20"
+                    style="width: 100%; border: solid 1px #CCCCCC; margin-top: 1rem; font-size:9px;"></textarea>
             </div>
         </section>
     </main>
@@ -113,6 +111,22 @@
         </div>
     </div>
 
+    <!-- Dynamic Edit Block modal -->
+    <div id="modalEditBlock" class="modal-overlay">
+        <div class="modal-box" style="width: 700px;">
+            <span class="modal-close-x" data-target="modalEditBlock" onclick="closeModal(this)">&times;</span>
+            <h2>Edit the page block</h2>
+
+            <div class="modal-body">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="canvas-buttons">
+                <button class="btn-primary" data-target="modalEditBlock" onclick="alert(this)">Save Changes</button>
+                <button class="modal-close-btn" data-target="modalEditBlock" onclick="closeModal(this)">Close</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         /**
@@ -155,12 +169,13 @@
                 globalPageId = $(this).val();
                 fetchPageData(globalPageId);
 
-                $("#sortable-list").empty();
+                //$("#sortable-list").empty();
+                $('#sortable-list').children().not('#loading-overlay').remove();
                 pageData.blocks.forEach(element => {
-                    //console.log(element);
                     let blockHTML = getBlockTemplateFromServer(element);
                     $("#sortable-list").append(blockHTML);
                 });
+
             });
         });
     </script>
@@ -247,6 +262,7 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('createBlock') }}",
+                async: false,
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
                     pageId: globalPageId,
@@ -255,6 +271,76 @@
                 success: function(response) {
                     console.log(response);
                 }
+            });
+        }
+
+        function openEditModal(triggerEl) {
+            let targetId = $(triggerEl).data('target');
+            let blockId = $(triggerEl).data('id');
+
+            // Collect block details like below
+            let fields = [];
+
+            // Ajax to route
+            $.ajax({
+                type: "GET",
+                url: "{{ route('getBlockSet') }}",
+                data: {
+                    blockId: blockId
+                },
+                async: false,
+                success: function(response) {
+                    fields = response;
+                    console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST", response);
+                    //$('#txtDisplay').val(JSON.stringify(response));
+                }
+            });
+
+            $('#txtDisplay').val(JSON.stringify(fields, null, 2));
+
+            populateModalBody(fields, targetId);
+            $('#' + targetId).show(); // or your custom modal open logic
+        }
+
+        function populateModalBody(fields, targetId) {
+            const body = $('#' + targetId + ' .modal-body');
+            body.empty(); // Clear existing content
+
+            fields.block_fields.forEach(field => {
+                let htmlElement;
+
+                switch (field.field_type) {
+                    case 'text':
+                    case 'file':
+                        htmlElement = `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <input id="${field.id}" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                            </div>`;
+                        break;
+                    case 'textarea':
+                        htmlElement = `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <textarea id="${field.id}" field_key="${field.field_key}" class="modal-input">${field.field_value}</textarea>
+                            </div>`;
+                        break;
+                    case 'select':
+                        htmlElement = `
+                            <div class="modal-group-input">
+                                <select class="modal-input">
+                                    <option>Test 1</option>
+                                    <option>Test 2</option>
+                                </select>
+                            </div>
+                        `;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                body.append(htmlElement);
             });
         }
     </script>
