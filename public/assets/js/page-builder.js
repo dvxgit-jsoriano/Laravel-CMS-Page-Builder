@@ -17,7 +17,8 @@ $(document).ready(function () {
         sort: true,
         onAdd: function (evt) {
 
-            console.log("EVT", evt);
+            console.log("GLOBALTEMPLATEID", globalTemplateId);
+            console.log("EVT.ITEM.DATASET", evt.item.dataset);
 
             // Show loading overlay at the start of event.
             $('#loading-overlay').addClass('show');
@@ -28,7 +29,9 @@ $(document).ready(function () {
             // Now safely remove the item
             evt.item.remove();
 
-            const response = {
+            let response = createBlock(type);
+
+            /* const response = {
                 "id": 2,
                 "page_id": 2,
                 "type": "hero",
@@ -71,7 +74,7 @@ $(document).ready(function () {
                         "updated_at": "2025-05-13T03:44:02.000000Z"
                     }
                 ]
-            };
+            }; */
 
             const blockData = response;
             console.log(blockData);
@@ -83,7 +86,7 @@ $(document).ready(function () {
 
             evt.to.appendChild(wrapper.firstElementChild);
 
-            createBlock(blockData);
+
 
             // Remove loading at the end of this event.
             $('#loading-overlay').removeClass('show');

@@ -38,8 +38,8 @@
 
             <h2 class="section-title">Components:</h2>
             <ul id="draggable-list" class="draggable-list">
-                <li data-block-type="block-navbar">Navigation Bar</li>
-                <li data-block-type="block-hero">Hero</li>
+                <li data-block-type="navigation">Navigation Bar</li>
+                <li data-block-type="hero">Hero</li>
                 <li data-block-type="block-feature">Feature</li>
                 <li data-block-type="block-card">Card</li>
                 <li data-block-type="block-footer">Footer</li>
@@ -258,7 +258,7 @@
             });
         }
 
-        function createBlock(blockData) {
+        function createBlock(type) {
             $.ajax({
                 type: "POST",
                 url: "{{ route('createBlock') }}",
@@ -266,12 +266,18 @@
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
                     pageId: globalPageId,
-                    blockData: blockData
+                    type: type
                 },
                 success: function(response) {
                     console.log(response);
+                    result = response;
+                },
+                error: function(response) {
+                    console.log(response);
                 }
             });
+
+            return result;
         }
 
         function openEditModal(triggerEl) {
