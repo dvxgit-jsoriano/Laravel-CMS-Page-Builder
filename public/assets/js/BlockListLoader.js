@@ -45,10 +45,11 @@ function getBlockTemplateFromServer(blockData) {
         return field ? escapeHtml(field.field_value) : '';
     };
 
+    // This is an arrow function used as helper to attach action buttons, Edit and Delete.
     const renderActionButtons = (blockId) => `
         <button class="absolute top-2 left-2 bg-red-800 bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn"
             data-target="modalEditBlock" data-id="${blockId}" onclick="openEditModal(this)">Edit</button>
-        <button class="absolute top-2 left-14 bg-red-800 bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn"
+        <button class="absolute top-2 left-14 bg-red-800 bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block delete-btn"
             data-target="modalDeleteBlock" data-id="${blockId}" onclick="openDeleteModal(this)">Delete</button>
     `;
 
