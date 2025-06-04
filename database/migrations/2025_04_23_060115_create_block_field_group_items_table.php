@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('block_field_group_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('block_field_group_id')->constrained();
+            $table->foreignId('block_field_group_id')->constrained()->onDelete('cascade');
             $table->string('field_name');
             $table->text('field_value');
             $table->string('field_type')->default('text'); // <--- new field here

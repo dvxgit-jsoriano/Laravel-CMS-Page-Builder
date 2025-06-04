@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('block_field_groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('block_id')->constrained();
+            $table->foreignId('block_id')->constrained()->onDelete('cascade');
             $table->string('group_name');
             $table->timestamps();
         });

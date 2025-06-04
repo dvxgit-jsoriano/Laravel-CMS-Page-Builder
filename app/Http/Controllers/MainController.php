@@ -88,38 +88,13 @@ class MainController extends Controller
 
     public function pageData($id)
     {
-        /*
-        {
-            "id": 1,
-            "site_id": 1,
-            "name": "slug-page-name",
-            "is_landing_page": 1,
-            "blocks": [
-                {
-                    "id": 3,
-                    "page_id": 1,
-                    "type": "navigation",
-                    "position": 1
-                },
-                {
-                    "id": 2,
-                    "page_id": 1,
-                    "type": "banner",
-                    "position": 2
-                },
-                {
-                    "id": 1,
-                    "page_id": 1,
-                    "type": "hero",
-                    "position": 3
-                }
-            ]
-        }
-        */
         $page = Page::where('id', $id)
             ->with(['blocks' => function ($query) {
                 // return ordered blocks by position column
-                $query->with('block_fields')->orderBy('position', 'ASC');
+                $query->with(
+                    'block_fields',
+                    'block_field_groups.block_field_group_items'
+                )->orderBy('position', 'ASC');
             }])
             ->first();
         return response()->json($page);
@@ -166,71 +141,132 @@ class MainController extends Controller
             'site_id' => $siteId,
             'template_id' => $templateId,
             'name' => $pageName,
+            'slug' => Str::slug($pageName),
             'is_landing_page' => $isLandingPage
         ]);
     }
 
     public function createBlock(Request $request)
     {
+        $templateName = $request->templateName;
+
         $blockFields = [];
-        $maxPos = Block::where('page_id', $request->pageId)->max('position');
+        $blockFieldGroup = '';
+        $blockFieldGroupItems = [];
+
+        $maxPos = Block::where('page_id', $request->pageId)->max('position') ?? 0;
 
         $block = Block::create([
             'page_id' => $request->pageId,
-            'type' => $request->blockData['type'],
+            'type' => $request->type,
             'position' => $maxPos + 1,
         ]);
 
-        switch ($request->blockData['type']) {
-            case 'hero':
-                $blockFields = [
-                    [
-                        'block_id' => $block->id,
-                        'field_key' => 'name',
-                        'field_value' => 'Hero Block',
-                        'field_type' => 'text',
-                    ],
-                    [
-                        'block_id' => $block->id,
-                        'field_key' => 'title',
-                        'field_value' => 'Welcome to Our Site!',
-                        'field_type' => 'text',
-                    ],
-                    [
-                        'block_id' => $block->id,
-                        'field_key' => 'sub_title',
-                        'field_value' => 'A place to showcase your products.',
-                        'field_type' => 'text',
-                    ],
-                    [
-                        'block_id' => $block->id,
-                        'field_key' => 'description',
-                        'field_value' => 'This is a hero section with catchy text and an attractive image.',
-                        'field_type' => 'textarea',
-                    ],
-                ];
-                break;
-            case 'navigation':
-                $blockFields = [
-                    [
-                        'block_id' => $block->id,
-                        'field_key' => 'name',
-                        'field_value' => 'Hero Block',
-                        'field_type' => 'text',
-                    ]
-                ];
+        switch ($templateName) {
+            case "Default Template":
+                switch ($request->type) {
+                    case 'navigation':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Logo Image URL',
+                                'field_value' => 'https://cdn-icons-png.flaticon.com/128/2202/2202112.png',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Logo Title',
+                                'field_value' => 'Navi',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Profile Title',
+                                'field_value' => 'Navi',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Profile URL',
+                                'field_value' => 'Navi',
+                                'field_type' => 'text',
+                            ]
+                        ];
 
-            default:
+                        // create a group called Center Links
+                        $blockFieldGroup = BlockFieldGroup::create([
+                            'block_id' => $block->id,
+                            'group_name' => 'Center Links',
+                        ]);
+
+                        $blockFieldGroupItems = [
+                            ['field_name' => 'Title', 'field_value' => 'Home', 'position' => 1],
+                            ['field_name' => 'URL', 'field_value' => '/home', 'position' => 1],
+                            ['field_name' => 'Title', 'field_value' => 'Profile', 'position' => 2],
+                            ['field_name' => 'URL', 'field_value' => '/profile', 'position' => 2],
+                            ['field_name' => 'Title', 'field_value' => 'Contacts', 'position' => 3],
+                            ['field_name' => 'URL', 'field_value' => '/contacts', 'position' => 3],
+                        ];
+                        break;
+
+                    case 'hero':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Title',
+                                'field_value' => 'Welcome to Our Site!',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Description',
+                                'field_value' => 'This is a hero section with catchy text and an attractive image.',
+                                'field_type' => 'textarea',
+                            ],
+                        ];
+                        break;
+
+                    default:
+                }
+                break;
+            case "Wicked Blocks":
+                switch ($request->type) {
+                    case 'navigation header':
+
+                        break;
+                    default:
+                }
+                break;
+            default;
         }
 
-        foreach ($blockFields as $field) {
-            BlockField::create([
-                'block_id' => $block->id,
-                'field_key' => $field['field_key'],
-                'field_value' => $field['field_value'],
-                'field_type' => $field['field_type'],
-            ]);
-        };
+        if (!empty($blockFields)) {
+            foreach ($blockFields as $field) {
+                BlockField::create([
+                    'block_id' => $block->id,
+                    'field_key' => $field['field_key'],
+                    'field_value' => $field['field_value'],
+                    'field_type' => $field['field_type'],
+                ]);
+            };
+        }
+
+        if ($blockFieldGroup && !empty($blockFieldGroupItems)) {
+            foreach ($blockFieldGroupItems as $item) {
+                BlockFieldGroupItem::create([
+                    'block_field_group_id' => $blockFieldGroup->id,
+                    'field_name' => $item['field_name'],
+                    'field_value' => $item['field_value'],
+                    'field_type' => 'text',
+                    'position' => $item['position'] ?? 0,
+                ]);
+            }
+        }
+
+        // Reload block with block_fields relationship
+        $block->load('block_fields', 'block_field_groups.block_field_group_items');
+
+        return response()->json($block);
     }
 
     public function getPages($siteId, Request $request)
@@ -299,5 +335,14 @@ class MainController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function updateBlockPositions(Request $request)
+    {
+        foreach ($request->positions as $positionData) {
+            Block::where('id', $positionData['id'])->update(['position' => $positionData['position']]);
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

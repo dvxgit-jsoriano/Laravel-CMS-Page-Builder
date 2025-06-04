@@ -38,7 +38,10 @@
 
             <h2 class="section-title">Components:</h2>
             <ul id="draggable-list" class="draggable-list">
-                <li data-block-type="navigation">Navigation Bar</li>
+                <li data-block-type="navigation">
+                    <h4>Navigation</h4>
+                    <img src="https://www.wickedblocks.dev/screenshots/original/header1.png">
+                </li>
                 <li data-block-type="hero">Hero</li>
                 <li data-block-type="block-feature">Feature</li>
                 <li data-block-type="block-card">Card</li>
@@ -128,6 +131,8 @@
         </div>
     </div>
 
+    <script src="assets/js/BlockListLoader.js"></script>
+
     <script>
         /**
          * Global Variables
@@ -135,13 +140,11 @@
         var globalSite = @json($site->id);
         var globalSiteId = @json($site->id);
         var globalTemplates;
-        var globalTemplateId = @json($template->id);
-        var globalTemplateName = @json($template->name);
+        var globalTemplateId = @json($template->id) ?? 1;
+        var globalTemplateName = @json($template->name) ?? '';
         var globalPageId;
         var pageData;
         var previousTemplateId;
-
-        console.log(globalSite);
 
         function getSiteInfo() {
             siteId = $("#select-site").val();
@@ -163,6 +166,9 @@
         $(document).ready(function() {
             globalSite = {{ $site->id }};
             globalSiteId = {{ $site->id }};
+
+            // Call function loadBlocksPerTemplate(), this loads the components or blocks of the selected template.
+            loadBlocksPerTemplate(globalTemplateName);
 
             $("#select-page").on("change", function() {
                 // Do this....
@@ -265,6 +271,7 @@
                 async: false,
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
+                    templateName: globalTemplateName,
                     pageId: globalPageId,
                     type: type
                 },
@@ -297,8 +304,6 @@
                 async: false,
                 success: function(response) {
                     fields = response;
-                    console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST", response);
-                    //$('#txtDisplay').val(JSON.stringify(response));
                 }
             });
 

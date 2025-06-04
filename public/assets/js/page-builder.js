@@ -16,9 +16,14 @@ $(document).ready(function () {
         animation: 150,
         sort: true,
         onAdd: function (evt) {
+            // Prevent the drop if there is no selected page.
+            if (!globalPageId) {
+                alert("Please select a page");
 
-            console.log("GLOBALTEMPLATEID", globalTemplateId);
-            console.log("EVT.ITEM.DATASET", evt.item.dataset);
+                // Undo the drop by removing the item
+                evt.item.remove();
+                return;
+            }
 
             // Show loading overlay at the start of event.
             $('#loading-overlay').addClass('show');
@@ -31,53 +36,9 @@ $(document).ready(function () {
 
             let response = createBlock(type);
 
-            /* const response = {
-                "id": 2,
-                "page_id": 2,
-                "type": "hero",
-                "position": 3,
-                "block_fields": [
-                    {
-                        "id": 5,
-                        "block_id": 2,
-                        "field_key": "name",
-                        "field_value": "Hero Block",
-                        "field_type": "text",
-                        "created_at": "2025-05-13T03:44:02.000000Z",
-                        "updated_at": "2025-05-13T03:44:02.000000Z"
-                    },
-                    {
-                        "id": 6,
-                        "block_id": 2,
-                        "field_key": "title",
-                        "field_value": "Welcome to Our Site!",
-                        "field_type": "text",
-                        "created_at": "2025-05-13T03:44:02.000000Z",
-                        "updated_at": "2025-05-13T03:44:02.000000Z"
-                    },
-                    {
-                        "id": 7,
-                        "block_id": 2,
-                        "field_key": "sub_title",
-                        "field_value": "A place to showcase your products.",
-                        "field_type": "text",
-                        "created_at": "2025-05-13T03:44:02.000000Z",
-                        "updated_at": "2025-05-13T03:44:02.000000Z"
-                    },
-                    {
-                        "id": 8,
-                        "block_id": 2,
-                        "field_key": "description",
-                        "field_value": "This is a hero section with catchy text and an attractive image.",
-                        "field_type": "textarea",
-                        "created_at": "2025-05-13T03:44:02.000000Z",
-                        "updated_at": "2025-05-13T03:44:02.000000Z"
-                    }
-                ]
-            }; */
-
             const blockData = response;
             console.log(blockData);
+            console.log(blockData.type);
 
             const blockHTML = getBlockTemplateFromServer(blockData);
 
@@ -86,10 +47,39 @@ $(document).ready(function () {
 
             evt.to.appendChild(wrapper.firstElementChild);
 
-
-
             // Remove loading at the end of this event.
             $('#loading-overlay').removeClass('show');
+        },
+
+        onEnd: function (evt) {
+            const updatedPositions = [];
+
+            $('#sortable-list .block').each(function (index) {
+                const blockId = $(this).data('block-id'); // jQuery .data() reads data-block-id
+                if (blockId) {
+                    updatedPositions.push({
+                        id: blockId,
+                        position: index + 1
+                    });
+                }
+            });
+
+            // Send AJAX to update positions in DB
+            $.ajax({
+                url: '/update-block-positions',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({ positions: updatedPositions }),
+                success: function (data) {
+                    console.log('Positions updated', data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to update positions', error);
+                }
+            });
         }
     });
 });
@@ -97,81 +87,6 @@ $(document).ready(function () {
 /**
  * Page Builder page functions
  */
-function getBlockTemplateFromServer(blockData) {
-    // Check the type of block and return HTML accordingly
-    switch (blockData.type) {
-        case 'hero':
-            return `
-                <section data-id="${blockData.id}" class="group relative">
-                    <button class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn"
-                        data-target="modalEditBlock" data-id="${blockData.id}" onclick="openEditModal(this)">Edit</button>
-                    <div class="p-6 bg-blue-100 rounded shadow">
-                        <h1 class="text-2xl font-bold mb-2">${escapeHtml(blockData.block_fields[1].field_value)}</h1>
-                        <p class="text-gray-700">${escapeHtml(blockData.block_fields[3].field_value)}</p>
-                    </div>
-                </section>
-            `;
-        case 'banner':
-            return `
-                <section data-id="${blockData.id}" class="group relative">
-                    <button class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn">
-                        Edit
-                    </button>
-                    <div class="p-4 bg-yellow-100 rounded shadow text-center">
-                        <p class="font-semibold">${escapeHtml(blockData.description)}</p>
-                    </div>
-                </section>
-            `;
-        case 'navigation':
-            const logoSrc = blockData.logo?.src || '';
-            const logoLabel = blockData.logo?.label || '';
-            const centerLinks = blockData.centerLinks?.map(link => `
-                <a href="${link.url}" class="p-4 underline-none text-gray-800 hover:text-gray-700">${link.title}</a>
-            `).join('') || '';
-
-            const profileTitle = blockData.profileLink?.title || '';
-            const profileUrl = blockData.profileLink?.url || '#';
-
-            return `
-                <section data-id="${blockData.id}" class="group relative">
-                    <button class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-3 py-1 rounded hover:bg-opacity-70 transition hidden group-hover:block edit-btn">
-                        Edit
-                    </button>
-                    <div class="p-4 flex justify-between items-center bg-green-100 rounded shadow">
-                        <div class="flex items-center">
-                            <img src="${logoSrc}" class="h-8" alt="Logo">
-                            <span class="ms-2 font-medium">${logoLabel}</span>
-                        </div>
-                        <div class="flex flex-row">
-                            ${centerLinks}
-                        </div>
-                        <div>
-                            <a href="${profileUrl}" class="p-4 underline-none text-gray-800 hover:text-gray-700">${profileTitle}</a>
-                        </div>
-                    </div>
-                </section>
-            `;
-        default:
-            return `<div class="p-4 bg-red-100 rounded">Unknown block type</div>`;
-    }
-}
-
-function escapeHtml(str) {
-    str = String(str || '<undefined>'); // Convert null/undefined to empty string
-
-    return str.replace(/[&<>"'`]/g, function (match) {
-        const escapeMap = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#x27;',
-            '`': '&#x60;'
-        };
-        return escapeMap[match];
-    });
-}
-
 function openTab() {
     // Clone the layout content using jQuery
     const $clonedLayout = $('#sortable-list').clone();
@@ -201,8 +116,6 @@ function openTab() {
         newWindow.document.close();
     });
 }
-
-
 
 
 function openModal(triggerEl) {
