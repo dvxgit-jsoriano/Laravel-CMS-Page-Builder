@@ -321,6 +321,17 @@ body {
     transform: scale(1.05);
 }
 
+.btn-danger {
+    background-color: #f44336;
+    /* Red for Clear */
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #e53935;
+    transform: scale(1.05);
+}
+
 .btn-primary {
     background-color: #388a3b;
     color: #fff;

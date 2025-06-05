@@ -314,6 +314,7 @@ class MainController extends Controller
             'position' => $block->position,
             'block_fields' => $block->block_fields->map(function ($field) {
                 return [
+                    'id' => $field->id,
                     'field_key' => $field->field_key,
                     'field_value' => $field->field_value,
                     'field_type' => $field->field_type,
@@ -321,9 +322,11 @@ class MainController extends Controller
             }),
             'block_field_groups' => $block->block_field_groups->map(function ($group) {
                 return [
+                    'id' => $group->id,
                     'group_name' => $group->group_name,
                     'items' => $group->block_field_group_items->map(function ($item) {
                         return [
+                            'id' => $item->id,
                             'field_name' => $item->field_name,
                             'field_value' => $item->field_value,
                             'field_type' => $item->field_type,
@@ -344,5 +347,10 @@ class MainController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function deleteBlock(Request $request)
+    {
+        return Block::where('id', $request->blockId)->delete();
     }
 }

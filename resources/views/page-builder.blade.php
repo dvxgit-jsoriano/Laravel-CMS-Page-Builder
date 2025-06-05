@@ -131,6 +131,22 @@
         </div>
     </div>
 
+    <div id="modalDeleteBlock" class="modal-overlay">
+        <div class="modal-box">
+            <span class="modal-close-x" data-target="modalDeleteBlock" onclick="closeModal(this)">&times;</span>
+            <h2>Confirmation</h2>
+
+            <div class="modal-body">
+                <h4>Are you sure you want to delete this block?</h4>
+            </div>
+
+            <div class="canvas-buttons">
+                <button class="btn-danger" data-target="modalDeleteBlock" onclick="deleteBlock(this)">Yes</button>
+                <button class="modal-close-btn" data-target="modalDeleteBlock" onclick="closeModal(this)">No</button>
+            </div>
+        </div>
+    </div>
+
     <script src="assets/js/BlockListLoader.js"></script>
 
     <script>
@@ -143,19 +159,18 @@
         var globalTemplateId = @json($template->id) ?? 1;
         var globalTemplateName = @json($template->name) ?? '';
         var globalPageId;
+        var globalBlockId;
         var pageData;
         var previousTemplateId;
 
         function getSiteInfo() {
             siteId = $("#select-site").val();
-            console.log("Site ID:", siteId);
             $.ajax({
                 type: "GET",
                 url: "{{ route('getSiteInfo', ['siteId' => ':siteId']) }}".replace(':siteId', siteId),
                 async: false,
                 success: function(response) {
                     globalTemplateId = response.template_id;
-                    console.log("Global Template ID:", globalTemplateId);
                     $('#select-template').val(globalTemplateId);
                 }
             });
@@ -171,11 +186,10 @@
             loadBlocksPerTemplate(globalTemplateName);
 
             $("#select-page").on("change", function() {
-                // Do this....
+                // Do this to refresh the page layout....
                 globalPageId = $(this).val();
                 fetchPageData(globalPageId);
-
-                //$("#sortable-list").empty();
+                // Empty the page layout excluding the loading-overlay
                 $('#sortable-list').children().not('#loading-overlay').remove();
                 pageData.blocks.forEach(element => {
                     let blockHTML = getBlockTemplateFromServer(element);
@@ -222,16 +236,12 @@
                     templateId: globalTemplateId
                 },
                 success: function(response) {
-                    console.log(response);
-
                     $('#select-page').empty();
                     $('#select-page').append(
                         `<option selected disabled>--Select Page--</option>`
                     );
 
                     $.each(response, function(index, el) {
-                        console.log(el);
-
                         $("#select-page").append(
                             `<option value="${el.id}">${el.name}</option>`
                         );
@@ -255,7 +265,7 @@
                     templateId: globalTemplateId,
                 },
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
 
                     loadPages();
 
@@ -276,7 +286,7 @@
                     type: type
                 },
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     result = response;
                 },
                 error: function(response) {
@@ -285,6 +295,34 @@
             });
 
             return result;
+        }
+
+        function deleteBlock(triggerEl) {
+            //console.log("Block ID: ", globalBlockId);
+
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('deleteBlock') }}",
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    blockId: globalBlockId
+                },
+                success: function(response) {
+                    /* console.log("Successfully deleted!!!!");
+                    console.log(response); */
+
+                    // Refresh the page layout contents
+                    fetchPageData(globalPageId);
+                    // Empty the page layout excluding the loading-overlay
+                    $('#sortable-list').children().not('#loading-overlay').remove();
+                    pageData.blocks.forEach(element => {
+                        let blockHTML = getBlockTemplateFromServer(element);
+                        $("#sortable-list").append(blockHTML);
+                    });
+
+                    closeModal(triggerEl);
+                }
+            });
         }
 
         function openEditModal(triggerEl) {
@@ -313,20 +351,37 @@
             $('#' + targetId).show(); // or your custom modal open logic
         }
 
-        function populateModalBody(fields, targetId) {
+        function openDeleteModal(triggerEl) {
+            let targetId = $(triggerEl).data('target');
+            let blockId = $(triggerEl).data('id');
+
+            globalBlockId = blockId;
+
+            $('#' + targetId).show(); // or your custom modal open logic
+        }
+
+        function populateModalBody(data, targetId) {
             const body = $('#' + targetId + ' .modal-body');
+
             body.empty(); // Clear existing content
 
-            fields.block_fields.forEach(field => {
+            // 1. Render basic block_fields
+            data.block_fields.forEach(field => {
                 let htmlElement;
 
                 switch (field.field_type) {
                     case 'text':
+                        htmlElement = `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <input id="${field.id}" type="text" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                            </div>`;
+                        break;
                     case 'file':
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <input id="${field.id}" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                                <input id="${field.id}" type="file" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
                             </div>`;
                         break;
                     case 'textarea':
@@ -353,6 +408,37 @@
 
                 body.append(htmlElement);
             });
+
+            // 2. Render grouped fields
+            data.block_field_groups.forEach(group => {
+                let htmlGroupElement;
+
+                console.log("GROUP", group);
+                console.log("GROUP NAME", group.group_name);
+
+                htmlGroupElement = `<div class="modal-field-group"  style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
+                    <label style="margin-bottom: 1rem; font-weight:bold;">${group.group_name}</label>
+                    <ul>
+                        <li>
+                            <div class="modal-field-group">
+                                <label>Title</label>
+                                <input id="15" class="modal-input" value="Home">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="modal-field-group">
+                                <label>URL</label>
+                                <input id="16" class="modal-input
+                    " value="#">
+                            </div>
+                        </li>
+                    </ul>
+                </div>`;
+
+                body.append(htmlGroupElement);
+            });
+
+
         }
     </script>
 
