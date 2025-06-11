@@ -195,11 +195,15 @@ body {
 .modal-box {
     background: white;
     width: 400px;
-    margin: 100px auto;
+    margin: 40px auto;
     padding: 20px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
+    max-height: 90vh;
+    /* ensures modal doesn't overflow the screen */
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-body .modal-field-group {
@@ -212,7 +216,13 @@ body {
 }
 
 .modal-box .modal-body {
-    margin-top: 1.5rem;
+    padding-top: 1rem;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    max-height: calc(100vh - 220px);
+    /* adjust based on your modal header/footer height */
+    padding-right: 10px;
+    /* optional: adds spacing for scrollbar */
 }
 
 .modal-box div label {
@@ -362,6 +372,20 @@ body {
 .btn-create:hover {
     background-color: #43a047;
     transform: scale(1.05);
+}
+
+.btn-add-group-item {
+    background-color: #388a3b;
+    color: #fff;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+}
+
+.btn-delete-group-item {
+    background-color: #222222;
+    color: #fff;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
 }
 
 /* Hover effect */

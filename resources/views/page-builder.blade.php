@@ -363,6 +363,33 @@
         function populateModalBody(data, targetId) {
             const body = $('#' + targetId + ' .modal-body');
 
+            const renderFieldInput = (field, groupId = '', position = '') => {
+                const baseAttrs = `
+                        id="${field.id}"
+                        class="modal-input"
+                        data-field-type="group-item"
+                        data-group-id="${groupId}"
+                        data-position="${position}"
+                        data-field-name="${field.field_name}"
+                    `;
+
+                switch (field.field_type) {
+                    case 'text':
+                        return `<input type="text" value="${field.field_value}" ${baseAttrs} />`;
+                    case 'textarea':
+                        return `<textarea ${baseAttrs}>${field.field_value}</textarea>`;
+                    case 'file':
+                        return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
+                    case 'select':
+                        return `<select ${baseAttrs}>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                    </select>`;
+                    default:
+                        return '';
+                }
+            };
+
             body.empty(); // Clear existing content
 
             // 1. Render basic block_fields
@@ -411,34 +438,51 @@
 
             // 2. Render grouped fields
             data.block_field_groups.forEach(group => {
-                let htmlGroupElement;
-
-                console.log("GROUP", group);
-                console.log("GROUP NAME", group.group_name);
-
-                htmlGroupElement = `<div class="modal-field-group"  style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
-                    <label style="margin-bottom: 1rem; font-weight:bold;">${group.group_name}</label>
-                    <ul>
-                        <li>
-                            <div class="modal-field-group">
-                                <label>Title</label>
-                                <input id="15" class="modal-input" value="Home">
+                const groupId = group.group_name.toLowerCase().replace(/\s+/g, '-');
+                const groupWrapper = $(`
+                        <div class="modal-field-group" style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight:bold;">${group.group_name}</label>
+                                <button type="button" class="btn-add-group-item" data-group-id="${groupId}">Add</button>
                             </div>
-                        </li>
-                        <li>
-                            <div class="modal-field-group">
-                                <label>URL</label>
-                                <input id="16" class="modal-input
-                    " value="#">
-                            </div>
-                        </li>
-                    </ul>
-                </div>`;
+                            <ul class="group-field-list" data-group-id="${groupId}" style="margin-top: 1rem;"></ul>
+                        </div>
+                    `);
 
-                body.append(htmlGroupElement);
+                const list = groupWrapper.find('ul');
+
+                // Group by position
+                const groupedItems = {};
+                group.items.forEach(item => {
+                    if (!groupedItems[item.position]) {
+                        groupedItems[item.position] = [];
+                    }
+                    groupedItems[item.position].push(item);
+                });
+
+                Object.entries(groupedItems).forEach(([pos, fields]) => {
+                    const li = $('<li style="margin-bottom: 1rem;"></li>');
+                    fields.forEach(field => {
+                        li.append(`
+                            <div class="modal-field-group">
+                                <label>${field.field_name}</label>
+                                ${renderFieldInput(field, groupId, pos)}
+                            </div>
+                        `);
+                    });
+
+                    // Optional Delete button
+                    li.append(`
+                        <div style="text-align:right;">
+                            <button type="button" class="btn-delete-group-item" data-group-id="${groupId}" data-position="${pos}">Delete</button>
+                        </div>
+                    `);
+
+                    list.append(li);
+                });
+
+                body.append(groupWrapper);
             });
-
-
         }
     </script>
 
