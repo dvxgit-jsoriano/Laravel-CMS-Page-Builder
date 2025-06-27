@@ -20,6 +20,12 @@ class SiteContentSeeder extends Seeder
         ]);
 
         $template = Template::create([
+            'name' => 'Barista Cafe',
+            'slug' => 'barista-cafe',
+            'desc' => 'This is the barista cafe template'
+        ]);
+
+        $template = Template::create([
             'name' => 'Wicked Blocks',
             'slug' => 'wicked-blocks',
             'desc' => 'This is the wicked blocks template'

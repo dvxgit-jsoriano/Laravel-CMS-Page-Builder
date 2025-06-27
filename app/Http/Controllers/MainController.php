@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Site;
 use App\Models\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -176,19 +177,19 @@ class MainController extends Controller
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Title',
-                                'field_value' => 'Navi',
+                                'field_value' => 'Barista',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Profile Title',
-                                'field_value' => 'Navi',
+                                'field_value' => 'Profile',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Profile URL',
-                                'field_value' => 'Navi',
+                                'field_value' => '#',
                                 'field_type' => 'text',
                             ]
                         ];
@@ -202,10 +203,10 @@ class MainController extends Controller
                         $blockFieldGroupItems = [
                             ['field_name' => 'Title', 'field_value' => 'Home', 'position' => 1],
                             ['field_name' => 'URL', 'field_value' => '/home', 'position' => 1],
-                            ['field_name' => 'Title', 'field_value' => 'Profile', 'position' => 2],
-                            ['field_name' => 'URL', 'field_value' => '/profile', 'position' => 2],
-                            ['field_name' => 'Title', 'field_value' => 'Contacts', 'position' => 3],
-                            ['field_name' => 'URL', 'field_value' => '/contacts', 'position' => 3],
+                            ['field_name' => 'Title', 'field_value' => 'About', 'position' => 2],
+                            ['field_name' => 'URL', 'field_value' => '/about', 'position' => 2],
+                            ['field_name' => 'Title', 'field_value' => 'Contact', 'position' => 3],
+                            ['field_name' => 'URL', 'field_value' => '/contact', 'position' => 3],
                         ];
                         break;
 
@@ -237,6 +238,283 @@ class MainController extends Controller
                     default:
                 }
                 break;
+            case "Barista Cafe":
+                switch ($request->type) {
+                    case "Navigation":
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Logo Image URL',
+                                'field_value' => 'templates/barista-cafe/images/coffee-beans.png',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Logo Title',
+                                'field_value' => 'Barista',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Reservation Title',
+                                'field_value' => 'Reservation',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Reservation URL',
+                                'field_value' => '#',
+                                'field_type' => 'text',
+                            ]
+                        ];
+
+                        $blockFieldGroupsData = [
+                            [
+                                'group_name' => 'Menu Links',
+                                'items' => [
+                                    ['field_name' => 'Title', 'field_value' => 'Home', 'position' => 1],
+                                    ['field_name' => 'URL', 'field_value' => '/home', 'position' => 1],
+                                    ['field_name' => 'Title', 'field_value' => 'About', 'position' => 2],
+                                    ['field_name' => 'URL', 'field_value' => '/about', 'position' => 2],
+                                    ['field_name' => 'Title', 'field_value' => 'Our Menu', 'position' => 3],
+                                    ['field_name' => 'URL', 'field_value' => '/our-enu', 'position' => 3],
+                                    ['field_name' => 'Title', 'field_value' => 'Reviews', 'position' => 4],
+                                    ['field_name' => 'URL', 'field_value' => '/reviews', 'position' => 4],
+                                    ['field_name' => 'Title', 'field_value' => 'Contact', 'position' => 5],
+                                    ['field_name' => 'URL', 'field_value' => '/contact', 'position' => 5],
+                                ]
+                            ]
+                        ];
+                        break;
+                    case 'Hero':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Welcome Message',
+                                'field_value' => 'Welcome to Barista.co',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Title',
+                                'field_value' => 'Cafe Klang',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Sub Title',
+                                'field_value' => 'your favourite coffee daily lives.',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Left Button Text',
+                                'field_value' => 'Our Story',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Left Button Link URL',
+                                'field_value' => '#',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Right Button Text',
+                                'field_value' => 'Check Menu',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Right Button Link URL',
+                                'field_value' => '#',
+                                'field_type' => 'text',
+                            ]
+                        ];
+                        break;
+                    case 'About':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Video Frame URL',
+                                'field_value' => 'templates/barista-cafe/videos/pexels-mike-jones-9046237.mp4',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Video Frame Description',
+                                'field_value' => 'We Started Since 2009. Best Kahidlaw Kape in the City.',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Website',
+                                'field_value' => 'KapeKahidlaw.co',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Title',
+                                'field_value' => 'Kape Kahidlaw',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Description',
+                                'field_value' => <<<HTML
+                                    <p class="text-white">The café had been in the town for as long as anyone could remember, and it had become a beloved institution among the locals.</p>
+                                    <p class="text-white">The café was run by a friendly and hospitable couple, Mr. and Mrs. Johnson. Barista Cafe is free Bootstrap 5 HTML layout provided by <a rel="nofollow" href="https://www.tooplate.com" target="_blank" draggable="false">Tooplate</a>.</p>
+                                HTML,
+                                'field_type' => 'html',
+                            ]
+                        ];
+                        break;
+                    case 'Baristas':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Top Header',
+                                'field_value' => 'Creative Baristas',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Header Title',
+                                'field_value' => 'Meet People',
+                                'field_type' => 'text',
+                            ]
+                        ];
+
+                        $blockFieldGroupsData = [
+                            [
+                                'group_name' => 'Barista Cards',
+                                'items' => [
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/portrait-elegant-old-man-wearing-suit.jpg', 'position' => 1],
+                                    ['field_name' => 'Name', 'field_value' => 'Steve', 'position' => 1],
+                                    ['field_name' => 'Position', 'field_value' => 'Boss', 'position' => 1],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily lives tempor', 'position' => 1],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/cute-korean-barista-girl-pouring-coffee-prepare-filter-batch-brew-pour-working-cafe.jpg', 'position' => 2],
+                                    ['field_name' => 'Name', 'field_value' => 'Sandra', 'position' => 2],
+                                    ['field_name' => 'Position', 'field_value' => 'Manager', 'position' => 2],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily lives.', 'position' => 2],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/small-business-owner-drinking-coffee.jpg', 'position' => 3],
+                                    ['field_name' => 'Name', 'field_value' => 'Jackson', 'position' => 3],
+                                    ['field_name' => 'Position', 'field_value' => 'Senior', 'position' => 3],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee maximized.', 'position' => 3],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/smiley-business-woman-working-cashier.jpg', 'position' => 4],
+                                    ['field_name' => 'Name', 'field_value' => 'Michelle', 'position' => 4],
+                                    ['field_name' => 'Position', 'field_value' => 'Barista', 'position' => 4],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily consectetur.', 'position' => 4],
+                                ]
+                            ]
+                        ];
+                        break;
+                    case 'Menu':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Background Image URL',
+                                'field_value' => 'templates/barista-cafe/images/happy-waitress-giving-coffee-customers-while-serving-them-coffee-shop.jpg',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Left Top Header',
+                                'field_value' => 'Delicious Menu',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Left Header Title',
+                                'field_value' => 'Breakfast',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Right Top Header',
+                                'field_value' => 'Favourite Menu',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Right Header Title',
+                                'field_value' => 'Coffee',
+                                'field_type' => 'text',
+                            ]
+                        ];
+
+                        $blockFieldGroupsData = [
+                            [
+                                'group_name' => 'Left Menu Cards',
+                                'items' => [
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Pancakes', 'position' => 1],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 1],
+                                    ['field_name' => 'Price', 'field_value' => '$12.50', 'position' => 1],
+                                    ['field_name' => 'Description', 'field_value' => 'Fresh whisked pancake for your honey cake.', 'position' => 1],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 1],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Toasted Waffle', 'position' => 2],
+                                    ['field_name' => 'Orig Price', 'field_value' => '$16.50', 'position' => 2],
+                                    ['field_name' => 'Price', 'field_value' => '$12.00', 'position' => 2],
+                                    ['field_name' => 'Description', 'field_value' => 'A very toasted flavored rich waffle.', 'position' => 2],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 2],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Fried Chips', 'position' => 3],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 3],
+                                    ['field_name' => 'Price', 'field_value' => '$15.00', 'position' => 3],
+                                    ['field_name' => 'Description', 'field_value' => 'An aromatic deep fried chips for lips.', 'position' => 3],
+                                    ['field_name' => 'Recommended', 'field_value' => 'true', 'position' => 3],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Basic Pancakes', 'position' => 4],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 4],
+                                    ['field_name' => 'Price', 'field_value' => '$12.50', 'position' => 4],
+                                    ['field_name' => 'Description', 'field_value' => 'Fresh whisked pancake for your honey cake.', 'position' => 4],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 4],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Banana Cakes', 'position' => 5],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 5],
+                                    ['field_name' => 'Price', 'field_value' => '$18.00', 'position' => 5],
+                                    ['field_name' => 'Description', 'field_value' => 'The most flavored banana for your banana lover.', 'position' => 5],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 5],
+                                ]
+                            ],
+                            [
+                                'group_name' => 'Right Menu Cards',
+                                'items' => [
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Latte', 'position' => 1],
+                                    ['field_name' => 'Orig Price', 'field_value' => '$12.50', 'position' => 1],
+                                    ['field_name' => 'Price', 'field_value' => '$7.50', 'position' => 1],
+                                    ['field_name' => 'Description', 'field_value' => 'Fresh brewed coffee and steamed milk. Yummy!', 'position' => 1],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 1],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'White Coffee', 'position' => 2],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 2],
+                                    ['field_name' => 'Price', 'field_value' => '$5.50', 'position' => 2],
+                                    ['field_name' => 'Description', 'field_value' => 'Brewed coffee and steamed milk.', 'position' => 2],
+                                    ['field_name' => 'Recommended', 'field_value' => 'true', 'position' => 2],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Chocolate Milk', 'position' => 3],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 3],
+                                    ['field_name' => 'Price', 'field_value' => '$5.50', 'position' => 3],
+                                    ['field_name' => 'Description', 'field_value' => 'Rich milk and foam for rich kids', 'position' => 3],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 3],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Greentea', 'position' => 4],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 4],
+                                    ['field_name' => 'Price', 'field_value' => '$7.50', 'position' => 4],
+                                    ['field_name' => 'Description', 'field_value' => 'Fresh brewed coffee and steamed milk', 'position' => 4],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 4],
+
+                                    ['field_name' => 'Menu Name', 'field_value' => 'Dark Chocolate', 'position' => 5],
+                                    ['field_name' => 'Orig Price', 'field_value' => '', 'position' => 5],
+                                    ['field_name' => 'Price', 'field_value' => '$7.25', 'position' => 5],
+                                    ['field_name' => 'Description', 'field_value' => 'Rich Milk and Foam', 'position' => 5],
+                                    ['field_name' => 'Recommended', 'field_value' => 'false', 'position' => 5],
+                                ]
+                            ]
+                        ];
+                        break;
+                }
             default;
         }
 
@@ -251,15 +529,23 @@ class MainController extends Controller
             };
         }
 
-        if ($blockFieldGroup && !empty($blockFieldGroupItems)) {
-            foreach ($blockFieldGroupItems as $item) {
-                BlockFieldGroupItem::create([
-                    'block_field_group_id' => $blockFieldGroup->id,
-                    'field_name' => $item['field_name'],
-                    'field_value' => $item['field_value'],
-                    'field_type' => 'text',
-                    'position' => $item['position'] ?? 0,
+        // Ensure the blockFieldGroup and blockFieldGroupItems are not empty before creating them
+        if (!empty($blockFieldGroup) && !empty($blockFieldGroupItems)) {
+            foreach ($blockFieldGroupsData as $groupData) {
+                $blockFieldGroup = BlockFieldGroup::create([
+                    'block_id' => $block->id,
+                    'group_name' => $groupData['group_name'],
                 ]);
+
+                foreach ($groupData['items'] as $item) {
+                    BlockFieldGroupItem::create([
+                        'block_field_group_id' => $blockFieldGroup->id,
+                        'field_name' => $item['field_name'],
+                        'field_value' => $item['field_value'],
+                        'field_type' => 'text',
+                        'position' => $item['position'] ?? 0,
+                    ]);
+                }
             }
         }
 
@@ -347,6 +633,49 @@ class MainController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function updateBlock(Request $request)
+    {
+        $payload = json_decode($request->input('payload'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json(['message' => 'Invalid JSON payload'], 400);
+        }
+
+        $block_fields = $payload['block_fields'] ?? [];
+        $block_field_groups = $payload['block_field_groups'] ?? [];
+
+        DB::transaction(function () use ($block_fields, $block_field_groups) {
+            // 🔥 Update block_fields
+            foreach ($block_fields as $field) {
+                $blockField = BlockField::find($field['id']);
+                if ($blockField) {
+                    $blockField->field_key = $field['field_key'];
+                    $blockField->field_value = $field['field_value'];
+                    $blockField->save();
+                }
+            }
+
+            // 🔥 Update block_field_group_items
+            foreach ($block_field_groups as $group) {
+                $groupName = $group['group_name'];
+                $items = $group['items'];
+
+                foreach ($items as $item) {
+                    $groupItem = BlockFieldGroupItem::find($item['id']);
+                    if ($groupItem) {
+                        //$groupItem->group_name = $groupName;
+                        $groupItem->field_name = $item['field_name'];
+                        $groupItem->field_value = $item['field_value'];
+                        $groupItem->position = $item['position'];
+                        $groupItem->save();
+                    }
+                }
+            }
+        });
+
+        return response()->json(['message' => 'Block updated successfully.']);
     }
 
     public function deleteBlock(Request $request)

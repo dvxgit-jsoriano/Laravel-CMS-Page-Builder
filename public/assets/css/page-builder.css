@@ -11,7 +11,7 @@ body {
 }
 
 /* Navbar */
-.navbar {
+.pb-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -126,6 +126,12 @@ body {
     color: #444;
 }
 
+.section-body-text {
+    font-size: 0.8rem;
+    margin-bottom: .5rem;
+    color: #444;
+}
+
 #sortable-list {
     position: relative;
     /* This makes the child absolutely positioned overlay relative to this div */
@@ -158,6 +164,7 @@ body {
 /* Component List */
 .draggable-list {
     list-style: none;
+    padding-left: 0;
 }
 
 .draggable-list li {
@@ -179,6 +186,10 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.draggable-list img {
+    width: 100%;
+}
+
 /* Modal overlay */
 .modal-overlay {
     display: none;
@@ -188,7 +199,7 @@ body {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 999;
+    z-index: 1000001;
 }
 
 /* Modal box */
@@ -209,10 +220,6 @@ body {
 .modal-body .modal-field-group {
     margin-bottom: 1rem;
     /* or any spacing you prefer */
-}
-
-.modal-box h2 {
-    font-weight: bold;
 }
 
 .modal-box .modal-body {
@@ -269,6 +276,10 @@ body {
     outline: none;
 }
 
+textarea.modal-input {
+    height: 12rem;
+}
+
 .select-primary {
     flex: 1;
     max-width: 200px;
@@ -299,7 +310,7 @@ body {
 /* Canvas Area */
 .canvas-content {
     border: 2px dashed #ccc;
-    min-height: 400px;
+    min-height: 600px;
     padding: .25rem;
     border-radius: 6px;
     background-color: #fafafa;
@@ -320,77 +331,122 @@ body {
     margin-right: 10px;
 }
 
-.btn-clear {
+.pb-btn-clear {
     background-color: #f44336;
     /* Red for Clear */
     color: #fff;
 }
 
-.btn-clear:hover {
+.pb-btn-clear:hover {
     background-color: #e53935;
     transform: scale(1.05);
 }
 
-.btn-danger {
+.pb-btn-danger {
     background-color: #f44336;
     /* Red for Clear */
     color: #fff;
 }
 
-.btn-danger:hover {
+.pb-btn-danger:hover {
     background-color: #e53935;
     transform: scale(1.05);
 }
 
-.btn-primary {
+.pb-btn-primary {
     background-color: #388a3b;
     color: #fff;
 }
 
-.btn-primary:hover {
+.pb-btn-primary:hover {
     background-color: #388a3b;
     transform: scale(1.05);
 }
 
-.btn-preview {
+.pb-btn-preview {
     background-color: #4caf50;
     color: #fff;
 }
 
-.btn-preview:hover {
+.pb-btn-preview:hover {
     background-color: #43a047;
     transform: scale(1.05);
 }
 
-.btn-create {
+.pb-btn-create {
     background-color: #4caf50;
     /* Green for Preview */
     color: #fff;
     width: 100%;
 }
 
-.btn-create:hover {
+.pb-btn-create:hover {
     background-color: #43a047;
     transform: scale(1.05);
 }
 
-.btn-add-group-item {
+.pb-btn-add-group-item {
     background-color: #388a3b;
     color: #fff;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
+    font-size: 12px;
 }
 
-.btn-delete-group-item {
+.pb-btn-delete-group-item {
     background-color: #222222;
     color: #fff;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
+    font-size: 12px;
+}
+
+.group-field-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+.group-field-list label {
+    font-size: 14px;
+    color: darkslategray;
 }
 
 /* Hover effect */
 button:hover {
     transform: scale(1.05);
+}
+
+.pb-render-button {
+    position: absolute;
+    top: 0.5rem;
+    background-color: rgba(153, 27, 27, 0.5);
+    border-color: rgba(153, 27, 27, 0.5);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    display: none;
+    transition: all 150ms ease;
+    z-index: 1000000;
+}
+
+.pb-render-button:hover {
+    background-color: rgba(153, 27, 27, 0.7);
+}
+
+.section-group {
+    position: relative;
+    display: block;
+}
+
+.section-group:hover .pb-render-button {
+    display: block;
+}
+
+.note-editable {
+    background-color: #f3f3f3 !important;
+    color: #333 !important;
 }
 
 /* Mobile Styles */

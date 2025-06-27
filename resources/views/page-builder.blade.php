@@ -1,7 +1,11 @@
 @extends('layouts.builder')
 
 @section('content')
-    <header class="navbar">
+    <div id="grouped-styles" style="display:none;">
+        @include('layouts.template-styles')
+    </div>
+
+    <header class="pb-navbar">
         <div class="nav-left">
             <img src="https://cdn-icons-png.flaticon.com/128/17357/17357982.png" alt="Logo" class="logo">
             <span class="title">Page Builder</span>
@@ -26,7 +30,7 @@
                 [{{ session('page_builder.template_id') }}]</h2>
 
             <div class="canvas-buttons">
-                <button id="openPageModal" class="btn-create" data-target="modalCreateNewPage"
+                <button id="openPageModal" class="pb-btn-create" data-target="modalCreateNewPage"
                     onclick="openModal(this);">Create New Page</button>
             </div>
             <div class="page-dropdown">
@@ -54,8 +58,8 @@
             <div class="canvas-header">
                 <h2 class="section-title">Page Layout</h2>
                 <div class="canvas-buttons">
-                    <button class="btn-clear">Clear Data</button>
-                    <button class="btn-preview" onclick="openTab()">Preview Page</button>
+                    <button class="pb-btn-clear">Clear Data</button>
+                    <button class="pb-btn-preview" onclick="openTab()">Preview Page</button>
                 </div>
             </div>
             <div id="sortable-list" class="canvas-content">
@@ -65,7 +69,7 @@
                 </div>
             </div>
             <div>
-                <textarea id="txtDisplay" rows="20"
+                <textarea id="txtDisplay" rows="4"
                     style="width: 100%; border: solid 1px #CCCCCC; margin-top: 1rem; font-size:9px;"></textarea>
             </div>
         </section>
@@ -78,7 +82,7 @@
     <div id="modalCreateNewSite" class="modal-overlay">
         <div class="modal-box">
             <span class="modal-close-x" data-target="modalCreateNewSite" onclick="closeModal(this)">&times;</span>
-            <h2>Create a new site</h2>
+            <h2 class="section-title">Create a new site</h2>
 
             <div class="modal-body">
                 <label for="siteName">Site
@@ -88,7 +92,7 @@
             </div>
 
             <div class="canvas-buttons">
-                <button class="btn-primary" data-target="modalCreateNewSite" onclick="createSite(this)">Create</button>
+                <button class="pb-btn-primary" data-target="modalCreateNewSite" onclick="createSite(this)">Create</button>
                 <button class="modal-close-btn" data-target="modalCreateNewSite" onclick="closeModal(this)">Close</button>
             </div>
         </div>
@@ -98,7 +102,7 @@
     <div id="modalCreateNewPage" class="modal-overlay">
         <div class="modal-box">
             <span class="modal-close-x" data-target="modalCreateNewPage" onclick="closeModal(this)">&times;</span>
-            <h2>Create a new page</h2>
+            <h2 class="section-title">Create a new page</h2>
 
             <div class="modal-body">
                 <label for="pageName">Page
@@ -108,7 +112,7 @@
             </div>
 
             <div class="canvas-buttons">
-                <button class="btn-primary" data-target="modalCreateNewPage" onclick="createPage(this)">Create</button>
+                <button class="pb-btn-primary" data-target="modalCreateNewPage" onclick="createPage(this)">Create</button>
                 <button class="modal-close-btn" data-target="modalCreateNewPage" onclick="closeModal(this)">Close</button>
             </div>
         </div>
@@ -118,14 +122,15 @@
     <div id="modalEditBlock" class="modal-overlay">
         <div class="modal-box" style="width: 700px;">
             <span class="modal-close-x" data-target="modalEditBlock" onclick="closeModal(this)">&times;</span>
-            <h2>Edit the page block</h2>
+            <h2 class="section-title">Edit the page block</h2>
 
             <div class="modal-body">
                 <!-- Dynamic content will be inserted here -->
             </div>
 
             <div class="canvas-buttons">
-                <button class="btn-primary" data-target="modalEditBlock" onclick="alert(this)">Save Changes</button>
+                <button class="pb-btn-primary" data-target="modalEditBlock" onclick="saveChanges(this)">Save
+                    Changes</button>
                 <button class="modal-close-btn" data-target="modalEditBlock" onclick="closeModal(this)">Close</button>
             </div>
         </div>
@@ -134,17 +139,21 @@
     <div id="modalDeleteBlock" class="modal-overlay">
         <div class="modal-box">
             <span class="modal-close-x" data-target="modalDeleteBlock" onclick="closeModal(this)">&times;</span>
-            <h2>Confirmation</h2>
+            <h2 class="section-title">Confirmation</h2>
 
             <div class="modal-body">
-                <h4>Are you sure you want to delete this block?</h4>
+                <h4 class="section-body-text">Are you sure you want to delete this block?</h4>
             </div>
 
             <div class="canvas-buttons">
-                <button class="btn-danger" data-target="modalDeleteBlock" onclick="deleteBlock(this)">Yes</button>
+                <button class="pb-btn-danger" data-target="modalDeleteBlock" onclick="deleteBlock(this)">Yes</button>
                 <button class="modal-close-btn" data-target="modalDeleteBlock" onclick="closeModal(this)">No</button>
             </div>
         </div>
+    </div>
+
+    <div id="grouped-scripts" style="display:none;">
+        @include('layouts.template-scripts')
     </div>
 
     <script src="assets/js/BlockListLoader.js"></script>
@@ -188,14 +197,8 @@
             $("#select-page").on("change", function() {
                 // Do this to refresh the page layout....
                 globalPageId = $(this).val();
-                fetchPageData(globalPageId);
-                // Empty the page layout excluding the loading-overlay
-                $('#sortable-list').children().not('#loading-overlay').remove();
-                pageData.blocks.forEach(element => {
-                    let blockHTML = getBlockTemplateFromServer(element);
-                    $("#sortable-list").append(blockHTML);
-                });
 
+                refreshPageLayout();
             });
         });
     </script>
@@ -246,6 +249,46 @@
                             `<option value="${el.id}">${el.name}</option>`
                         );
                     });
+                }
+            });
+        }
+
+        function refreshPageLayout() {
+            fetchPageData(globalPageId);
+            $('#sortable-list').children().not('#loading-overlay').remove();
+            pageData.blocks.forEach(element => {
+                let blockHTML = getBlockTemplateFromServer(globalTemplateName, element);
+                $("#sortable-list").append(blockHTML);
+            });
+        }
+
+        function initDynamicEditors() {
+            $('.dynamic-editor').each(function() {
+                if (!$(this).hasClass('summernote-initialized')) {
+                    $(this).summernote({
+                        height: 200,
+                        toolbar: [
+                            ['style', ['bold', 'italic', 'underline']],
+                            ['font', ['fontname', 'color']],
+                            ['para', ['ul', 'ol']],
+                            ['insert', ['link', 'picture', 'table']],
+                            //['view', ['codeview']]
+                        ],
+                        callbacks: {
+                            onPaste: function(e) {
+                                // Avoid default paste behavior
+                                e.preventDefault();
+
+                                // Get plain text from clipboard
+                                const clipboardData = (e.originalEvent || e).clipboardData || window
+                                    .clipboardData;
+                                const text = clipboardData.getData('text/plain');
+
+                                // Insert plain text only
+                                document.execCommand('insertText', false, text);
+                            }
+                        }
+                    }).addClass('summernote-initialized');
                 }
             });
         }
@@ -316,7 +359,7 @@
                     // Empty the page layout excluding the loading-overlay
                     $('#sortable-list').children().not('#loading-overlay').remove();
                     pageData.blocks.forEach(element => {
-                        let blockHTML = getBlockTemplateFromServer(element);
+                        let blockHTML = getBlockTemplateFromServer(globalTemplateName, element);
                         $("#sortable-list").append(blockHTML);
                     });
 
@@ -364,9 +407,11 @@
             const body = $('#' + targetId + ' .modal-body');
 
             const renderFieldInput = (field, groupId = '', position = '') => {
+                const isHtml = field.field_type === 'html';
+
                 const baseAttrs = `
                         id="${field.id}"
-                        class="modal-input"
+                        class="modal-input ${isHtml ? ' dynamic-editor' : ''}"
                         data-field-type="group-item"
                         data-group-id="${groupId}"
                         data-position="${position}"
@@ -378,6 +423,8 @@
                         return `<input type="text" value="${field.field_value}" ${baseAttrs} />`;
                     case 'textarea':
                         return `<textarea ${baseAttrs}>${field.field_value}</textarea>`;
+                    case 'html':
+                        return `<div ${baseAttrs}>${field.field_value}</div>`;
                     case 'file':
                         return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
                     case 'select':
@@ -401,21 +448,28 @@
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <input id="${field.id}" type="text" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                                <input data-id="${field.id}" type="text" data-field-key="${field.field_key}" data-field-type="${field.field_type}" value="${field.field_value}" class="modal-input" />
                             </div>`;
                         break;
                     case 'file':
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <input id="${field.id}" type="file" field_key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                                <input data-id="${field.id}" type="file" data-field-key="${field.field_key}" data-field-type="${field.field_type}" value="${field.field_value}" class="modal-input" />
+                            </div>`;
+                        break;
+                    case 'html':
+                        htmlElement = `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <div data-id="${field.id}" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input dynamic-editor">${field.field_value}</div>
                             </div>`;
                         break;
                     case 'textarea':
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <textarea id="${field.id}" field_key="${field.field_key}" class="modal-input">${field.field_value}</textarea>
+                                <textarea data-id="${field.id}" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input">${field.field_value}</textarea>
                             </div>`;
                         break;
                     case 'select':
@@ -443,7 +497,7 @@
                         <div class="modal-field-group" style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label style="font-weight:bold;">${group.group_name}</label>
-                                <button type="button" class="btn-add-group-item" data-group-id="${groupId}">Add</button>
+                                <button type="button" class="pb-btn-add-group-item" data-group-id="${groupId}">Add</button>
                             </div>
                             <ul class="group-field-list" data-group-id="${groupId}" style="margin-top: 1rem;"></ul>
                         </div>
@@ -474,7 +528,7 @@
                     // Optional Delete button
                     li.append(`
                         <div style="text-align:right;">
-                            <button type="button" class="btn-delete-group-item" data-group-id="${groupId}" data-position="${pos}">Delete</button>
+                            <button type="button" class="pb-btn-delete-group-item" data-group-id="${groupId}" data-position="${pos}">Delete</button>
                         </div>
                     `);
 
@@ -483,6 +537,87 @@
 
                 body.append(groupWrapper);
             });
+
+            initDynamicEditors(); // initialize after HTML is rendered
+        }
+
+        function saveChanges(triggerEl) {
+            // Get the modal ID from button's data-target attribute
+            const targetId = $(triggerEl).data('target');
+            const modal = $('#' + targetId);
+
+            const blockId = modal.data('block-id'); // (Optional) in case you want to send which block you're editing
+
+            const block_fields = [];
+            const block_field_groups = [];
+
+            // 1️⃣ Collect simple block_fields
+            modal.find('.modal-input[data-field-key]').each(function() {
+                console.log("FIELD TYPE!", $(this).data('field-type'));
+                const field = {
+                    id: $(this).data('id'),
+                    field_key: $(this).data('field-key'),
+                    field_value: $(this).data('field-type') === 'html' ? $(this).summernote('code') : $(this)
+                        .val()
+                };
+                block_fields.push(field);
+            });
+
+            // 2️⃣ Collect grouped fields
+            modal.find('.group-field-list').each(function() {
+                const groupId = $(this).data('group-id');
+                const group_name = groupId.replace(/-/g, ' ').replace(/\b\w/g, c => c
+                    .toUpperCase()); // convert back if needed
+
+                const items = [];
+
+                $(this).find('li').each(function() {
+                    const position = $(this).find('.modal-input').first().data(
+                        'position'); // assume all fields in same li share same position
+
+                    $(this).find('.modal-input').each(function() {
+                        items.push({
+                            id: $(this).attr('id'),
+                            field_name: $(this).data('field-name'),
+                            field_value: $(this).val(),
+                            position: position
+                        });
+                    });
+                });
+
+                block_field_groups.push({
+                    group_name: group_name,
+                    items: items
+                });
+            });
+
+            // 🔥 Prepare the final payload
+            const payload = {
+                block_fields: block_fields,
+                block_field_groups: block_field_groups
+            };
+
+            console.log("Saving Payload: ", payload); // For debugging
+
+            // 3️⃣ Send AJAX request to Laravel
+            $.ajax({
+                url: '{{ route('updateBlock') }}', // <-- you will replace this with your Laravel route
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    payload: JSON.stringify(payload)
+                },
+                success: function(response) {
+                    console.log(response);
+                    refreshPageLayout();
+                    console.log("Changes saved successfully!");
+                },
+                error: function(response) {
+                    console.error(response.responseJSON.message ?? "There is an error found.");
+                }
+            });
+
+            closeModal(triggerEl);
         }
     </script>
 

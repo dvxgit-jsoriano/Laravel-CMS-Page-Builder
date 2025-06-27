@@ -40,7 +40,7 @@ $(document).ready(function () {
             console.log(blockData);
             console.log(blockData.type);
 
-            const blockHTML = getBlockTemplateFromServer(blockData);
+            const blockHTML = getBlockTemplateFromServer(globalTemplateName, blockData);
 
             const wrapper = document.createElement('div');
             wrapper.innerHTML = blockHTML;
@@ -52,10 +52,11 @@ $(document).ready(function () {
         },
 
         onEnd: function (evt) {
-            const updatedPositions = [];
+            let updatedPositions = [];
 
-            $('#sortable-list .block').each(function (index) {
+            $('#sortable-list .section-group').each(function (index) {
                 const blockId = $(this).data('block-id'); // jQuery .data() reads data-block-id
+                console.log("BLOCK ID", blockId);
                 if (blockId) {
                     updatedPositions.push({
                         id: blockId,
@@ -63,6 +64,8 @@ $(document).ready(function () {
                     });
                 }
             });
+
+            console.log("UPDATED POSITIONS", updatedPositions);
 
             // Send AJAX to update positions in DB
             $.ajax({
@@ -98,16 +101,21 @@ function openTab() {
 
     const layoutContent = $clonedLayout.html();
 
+    const layoutHeaderStyles = $('#grouped-styles').html();
+    const layoutHeaderScripts = $('#grouped-scripts').html();
+
     const html =
         '<!DOCTYPE html>' +
         '<html lang="en">' +
         '<head>' +
         '<meta charset="UTF-8">' +
         '<title>Exported Layout</title>' +
-        '<script src="https://cdn.tailwindcss.com"><\/script>' +
+        layoutHeaderStyles +
+        /* '<script src="https://cdn.tailwindcss.com"><\/script>' + */
         '</head>' +
         '<body class="bg-gray-50">' +
         layoutContent +
+        layoutHeaderScripts +
         '</body>' +
         '</html>';
 
