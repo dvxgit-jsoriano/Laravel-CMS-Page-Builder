@@ -26,14 +26,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine-ie11.min.js"></script>
     @break
 
-    @case('Barista Cafe')
+    @case('Hotel Diavox')
         {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> --}}
-        {{-- <script src="templates/barista-cafe/js/jquery.min.js"></script> --}}
-        <script src="templates/barista-cafe/js/bootstrap.min.js"></script>
-        <script src="templates/barista-cafe/js/jquery.sticky.js"></script>
-        <script src="templates/barista-cafe/js/click-scroll.js"></script>
-        <script src="templates/barista-cafe/js/vegas.min.js"></script>
-        <script src="templates/barista-cafe/js/custom.js"></script>
+        {{-- <script src="templates/hotel-diavox/js/jquery.min.js"></script> --}}
+        <script src="templates/hotel-diavox/js/bootstrap.min.js"></script>
+        <script src="templates/hotel-diavox/js/jquery.sticky.js"></script>
+        <script src="templates/hotel-diavox/js/click-scroll.js"></script>
+        <script src="templates/hotel-diavox/js/vegas.min.js"></script>
+        <script src="templates/hotel-diavox/js/custom.js"></script>
     @break
 
     @default

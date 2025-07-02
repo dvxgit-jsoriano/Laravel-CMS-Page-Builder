@@ -27,35 +27,47 @@ function loadBlocksPerTemplate(templateName) {
             `);
             break;
 
-        case "Barista Cafe":
+        case "Hotel Diavox":
             $("#draggable-list").append(`
                 <li data-block-type="Navigation">
                     <h4>Navigation</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    <img src="assets/images/templates/hotel-diavox/component-navigation.png">
                 </li>
             `);
             $("#draggable-list").append(`
                 <li data-block-type="Hero">
                     <h4>Hero</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    <img src="assets/images/templates/hotel-diavox/component-hero.png">
                 </li>
             `);
             $("#draggable-list").append(`
                 <li data-block-type="About">
                     <h4>About</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    <img src="assets/images/templates/hotel-diavox/component-about.png">
                 </li>
             `);
             $("#draggable-list").append(`
-                <li data-block-type="Baristas">
-                    <h4>Baristas</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                <li data-block-type="Staff">
+                    <h4>Staff</h4>
+                    <img src="assets/images/templates/hotel-diavox/component-staff.png">
                 </li>
             `);
             $("#draggable-list").append(`
                 <li data-block-type="Menu">
                     <h4>Menu</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    <img src="assets/images/templates/hotel-diavox/component-menu.png">
+                </li>
+            `);
+            $("#draggable-list").append(`
+                <li data-block-type="Reviews">
+                    <h4>Reviews</h4>
+                    <img src="assets/images/templates/hotel-diavox/component-reviews.png">
+                </li>
+            `);
+            $("#draggable-list").append(`
+                <li data-block-type="Contacts">
+                    <h4>Contacts</h4>
+                    <img src="assets/images/templates/hotel-diavox/component-contacts.png">
                 </li>
             `);
 
@@ -209,7 +221,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
                         </section>
                     `;
             }
-        case "Barista Cafe":
+        case "Hotel Diavox":
             // get specific block type
             switch (blockData.type) {
                 case 'Navigation':
@@ -227,7 +239,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             <nav class="navbar navbar-expand-lg">
                                 <div class="container">
                                     <a class="navbar-brand d-flex align-items-center" href="#">
-                                        <img src="${getFieldValue('Logo Image URL')}" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                                        <img src="${getFieldValue('Logo Image URL')}" class="me-2" alt="Hotel Diavox Template">
                                         ${getFieldValue('Logo Title')}
                                     </a>
                                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -252,7 +264,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
                     return `
                         <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
                             <div class="hero-section d-flex justify-content-center align-items-center" id="section_1">
-                            ${renderActionButtons(blockData.id)}
+                                ${renderActionButtons(blockData.id)}
                                 <div class="container">
                                     <div class="row align-items-center">
                                         <div class="col-lg-6 col-12 mx-auto">
@@ -270,7 +282,11 @@ function getBlockTemplateFromServer(templateName, blockData) {
                                 </div>
 
                                 <div class="hero-slides">
+                                    <img src="${getFieldValue('Background Image URL 01')}" style="display: none;" />
+                                    <img src="${getFieldValue('Background Image URL 02')}" style="display: none;" />
+                                    <img src="${getFieldValue('Background Image URL 03')}" style="display: none;" />
                                 </div>
+                            </div>
                         </section>
                     `;
                 case "About":
@@ -303,7 +319,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
 
                                             <p>${getFieldHTML('Description')}</p>
 
-                                            <a href="#barista-team" class="smoothscroll btn custom-btn custom-border-btn mt-3 mb-4">Meet Baristas</a>
+                                            <a href="#staff-team" class="smoothscroll btn custom-btn custom-border-btn mt-3 mb-4">Meet Staff</a>
                                         </div>
 
                                     </div>
@@ -311,10 +327,10 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             </div>
                         </section>
                     `;
-                case "Baristas":
-                    const baristas = extractGroupedItems(blockData, 'Barista Cards');
+                case "Staff":
+                    const staff = extractGroupedItems(blockData, 'Staff Cards');
 
-                    const baristaCards = baristas.map(item => {
+                    const staffCards = staff.map(item => {
                         return `
                             <div class="col-lg-3 col-md-6 col-12 mb-4">
                                 <div class="team-block-wrap">
@@ -335,10 +351,9 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             </div>
                         `}).join('');
 
-
                     return `
                         <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
-                            <div class="barista-section section-padding section-bg" id="barista-team">
+                            <div class="barista-section section-padding section-bg" id="staff-team">
                                 ${renderActionButtons(blockData.id)}
                                 <div class="container">
                                     <div class="row justify-content-center">
@@ -349,7 +364,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
                                             <h2 class="text-white">${getFieldValue('Header Title')}</h2>
                                         </div>
 
-                                        ${baristaCards}
+                                        ${staffCards}
 
                                     </div>
                                 </div>
@@ -357,18 +372,20 @@ function getBlockTemplateFromServer(templateName, blockData) {
                         </section>
                     `;
                 case "Menu":
-
-                    const leftMenu = extractGroupedItems(blockData, 'Barista Cards');
-
+                    const leftMenu = extractGroupedItems(blockData, 'Left Menu Cards');
                     const leftMenuCards = leftMenu.map(item => {
+                        // if the item has an original price, show it
+                        const origPrice = item['Orig Price'];
+                        // if the item is recommended, show a badge
+                        const recommended = item['Recommended'];
                         return `
-                            <div class="menu-block">
+                            <div class="menu-block my-4">
                                 <div class="d-flex">
-                                    <h6>${item['Menu Name']}</h6>
+                                    <h6>${item['Menu Name']} ${recommended == "true" ? `<span class="badge ms-3">Recommend</span>` : ''}</h6>
 
                                     <span class="underline"></span>
 
-                                    <strong class="ms-auto">$12.50</strong>
+                                    ${origPrice ? `<strong class="text-white ms-auto"><del>${origPrice}</del></strong><strong class="ms-2">${item['Price']}</strong>` : `<strong class="ms-auto">${item['Price']}</strong>`}
                                 </div>
 
                                 <div class="border-top mt-2 pt-2">
@@ -377,6 +394,27 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             </div>
                         `}).join('');
 
+                    const rightMenu = extractGroupedItems(blockData, 'Right Menu Cards');
+                    const rightMenuCards = rightMenu.map(item => {
+                        // if the item has an original price, show it
+                        const origPrice = item['Orig Price'];
+                        // if the item is recommended, show a badge
+                        const recommended = item['Recommended'];
+                        return `
+                            <div class="menu-block my-4">
+                                <div class="d-flex">
+                                    <h6>${item['Menu Name']} ${recommended == "true" ? `<span class="badge ms-3">Recommend</span>` : ''}</h6>
+
+                                    <span class="underline"></span>
+
+                                    ${origPrice ? `<strong class="text-white ms-auto"><del>${origPrice}</del></strong><strong class="ms-2">${item['Price']}</strong>` : `<strong class="ms-auto">${item['Price']}</strong>`}
+                                </div>
+
+                                <div class="border-top mt-2 pt-2">
+                                    <small>Fresh brewed coffee and steamed milk</small>
+                                </div>
+                            </div>
+                        `}).join('');
 
                     return `
                         <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
@@ -391,99 +429,152 @@ function getBlockTemplateFromServer(templateName, blockData) {
                                                     <em class="text-white">${getFieldValue('Left Top Header')}</em>
                                                     <h4 class="text-white">${getFieldValue('Left Header Title')}</h4>
                                                 </div>
-
                                                 ${leftMenuCards}
-
                                             </div>
                                         </div>
 
                                         <div class="col-lg-6 col-12">
                                             <div class="menu-block-wrap">
                                                 <div class="text-center mb-4 pb-lg-2">
-                                                    <em class="text-white">Favourite Menu</em>
-                                                    <h4 class="text-white">Coffee</h4>
+                                                    <em class="text-white">${getFieldValue('Right Top Header')}</em>
+                                                    <h4 class="text-white">${getFieldValue('Right Header Title')}</h4>
                                                 </div>
-
-                                                <div class="menu-block">
-                                                    <div class="d-flex">
-                                                        <h6>Latte</h6>
-
-                                                        <span class="underline"></span>
-
-                                                        <strong class="text-white ms-auto"><del>$12.50</del></strong>
-
-                                                        <strong class="ms-2">$7.50</strong>
-                                                    </div>
-
-                                                    <div class="border-top mt-2 pt-2">
-                                                        <small>Fresh brewed coffee and steamed milk</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="menu-block my-4">
-                                                    <div class="d-flex">
-                                                        <h6>
-                                                            White Coffee
-                                                            <span class="badge ms-3">Recommend</span>
-                                                        </h6>
-
-                                                        <span class="underline"></span>
-
-                                                        <strong class="ms-auto">$5.90</strong>
-                                                    </div>
-
-                                                    <div class="border-top mt-2 pt-2">
-                                                        <small>Brewed coffee and steamed milk</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="menu-block">
-                                                    <div class="d-flex">
-                                                        <h6>Chocolate Milk</h6>
-
-                                                        <span class="underline"></span>
-
-                                                        <strong class="ms-auto">$5.50</strong>
-                                                    </div>
-
-                                                    <div class="border-top mt-2 pt-2">
-                                                        <small>Rich Milk and Foam</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="menu-block my-4">
-                                                    <div class="d-flex">
-                                                        <h6>Greentea</h6>
-
-                                                        <span class="underline"></span>
-
-                                                        <strong class="ms-auto">$7.50</strong>
-                                                    </div>
-
-                                                    <div class="border-top mt-2 pt-2">
-                                                        <small>Fresh brewed coffee and steamed milk</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="menu-block">
-                                                    <div class="d-flex">
-                                                        <h6>Dark Chocolate</h6>
-
-                                                        <span class="underline"></span>
-
-                                                        <strong class="ms-auto">$7.25</strong>
-                                                    </div>
-
-                                                    <div class="border-top mt-2 pt-2">
-                                                        <small>Rich Milk and Foam</small>
-                                                    </div>
-                                                </div>
+                                                ${rightMenuCards}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </section>
+                        `;
+                case 'Reviews':
+                    const reviews = extractGroupedItems(blockData, 'Review Cards');
+                    let row = 1;
+
+                    const reviewCards = reviews.map(item => {
+                        const positionClass = row % 2 === 0 ? 'timeline-container-right' : 'timeline-container-left';
+                        let ratingHTML = '';
+                        for (let i = 0; i < 5; i++) {
+                            if (i < Math.floor(item['Rating'])) {
+                                ratingHTML += `<i class="bi-star-fill"></i>`;
+                            } else {
+                                ratingHTML += `<i class="bi-star"></i>`;
+                            }
+                        }
+
+                        row++;
+
+                        return `
+                            <div class="timeline-container ${positionClass}">
+                                <div class="timeline-content">
+                                    <div class="reviews-block">
+                                        <div class="reviews-block-image-wrap d-flex align-items-center" style="background-image: url('${getFieldValue('Card Header Background')}');">
+                                            <img src="${item['Person Picture URL']}" class="reviews-block-image img-fluid" alt="">
+
+                                            <div class="">
+                                                <h6 class="text-white mb-0">${item['Name']}</h6>
+                                                <em class="text-white">${item['Title']}</em>
+                                            </div>
+                                        </div>
+
+                                        <div class="reviews-block-info">
+                                            <p>${item['Testimonial']}</p>
+
+                                            <div class="d-flex border-top pt-3 mt-4">
+                                                <strong class="text-white">${item['Rating']} <small class="ms-2">Rating</small></strong>
+
+                                                <div class="reviews-group ms-auto">
+                                                    ${ratingHTML}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `}).join('');
+
+                    return `
+                        <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
+                            <div class="reviews-section section-padding section-bg" id="section_4">
+                                ${renderActionButtons(blockData.id)}
+                                <div class="container">
+                                    <div class="row justify-content-center">
+
+                                        <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
+                                            <em class="text-white">${getFieldValue('Top Header')}</em>
+
+                                            <h2 class="text-white">${getFieldValue('Header Title')}</h2>
+                                        </div>
+
+                                        <div class="timeline">
+
+                                            ${reviewCards}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </section>`;
+                case 'Contacts':
+                    return `
+                    <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
+                        <div class="contact-section section-padding" id="section_5">
+                            ${renderActionButtons(blockData.id)}
+                            <div class="container">
+                                <div class="row">
+
+                                    <div class="col-lg-12 col-12">
+                                        <em class="text-white">${getFieldValue('Top Header')}</em>
+                                        <h2 class="text-white mb-4 pb-lg-2">${getFieldValue('Header Title')}</h2>
+                                    </div>
+
+                                    <div class="col-lg-6 col-12">
+                                        <form action="#" method="GET" class="custom-form contact-form" role="form">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-6 col-12">
+                                                <label for="name" class="form-label">Name <sup class="text-danger">*</sup></label>
+
+                                                <input type="text" name="name" id="name" class="form-control" placeholder="Jackson" required="">
+                                            </div>
+
+                                            <div class="col-lg-6 col-12">
+                                                <label for="email" class="form-label">Email Address</label>
+
+                                                <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jack@gmail.com" required="">
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="message" class="form-label">How can we help?</label>
+
+                                                <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message" required=""></textarea>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-5 col-12 mx-auto mt-3">
+                                            <button
+                                                type="button"
+                                                class="btn btn-warning"
+                                                onclick="window.location.href = 'mailto:${getFieldValue('Mailto Email')}?subject=Inquiry&amp;body=' + encodeURIComponent(
+                                                        'Name: ' + document.getElementById('name').value + '\\nEmail: ' + document.getElementById('email').value + '\\n\\n' + document.getElementById('message').value
+                                                    ); return false;">
+                                                    Send Message
+                                            </button>
+                                        </div>
+                                    </form>
+                                    </div>
+
+                                    <div class="col-lg-6 col-12 mx-auto mt-5 mt-lg-0 ps-lg-5">
+                                        <iframe class="google-map" src="${getFieldValue('Google Map iFrame Source URL')}" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     `;
                 default:
                     return `
@@ -491,15 +582,15 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             ${renderActionButtons(blockData.id)}
                             <div class="p-4 bg-red-100 rounded">Unknown block type</div>
                         </section>
-                    `;
+                        `;
             }
         default:
             return `
-                <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
+                <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}" >
                     ${renderActionButtons(blockData.id)}
                     <div class="p-4 bg-red-100 rounded">Unknown block type</div>
                 </section>
-            `;
+                `;
     }
 
 }

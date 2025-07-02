@@ -171,13 +171,13 @@ class MainController extends Controller
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Image URL',
-                                'field_value' => 'https://cdn-icons-png.flaticon.com/128/2202/2202112.png',
+                                'field_value' => 'templates/hotel-diavox/images/diavox-logo-small.jpg',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Title',
-                                'field_value' => 'Barista',
+                                'field_value' => 'Hotel Diavox',
                                 'field_type' => 'text',
                             ],
                             [
@@ -238,20 +238,20 @@ class MainController extends Controller
                     default:
                 }
                 break;
-            case "Barista Cafe":
+            case "Hotel Diavox":
                 switch ($request->type) {
                     case "Navigation":
                         $blockFields = [
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Image URL',
-                                'field_value' => 'templates/barista-cafe/images/coffee-beans.png',
+                                'field_value' => 'templates/hotel-diavox/images/diavox-logo-small.jpg',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Title',
-                                'field_value' => 'Barista',
+                                'field_value' => 'Hotel Diavox',
                                 'field_type' => 'text',
                             ],
                             [
@@ -291,19 +291,19 @@ class MainController extends Controller
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Welcome Message',
-                                'field_value' => 'Welcome to Barista.co',
+                                'field_value' => 'Welcome to HotelDiavox.com',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Title',
-                                'field_value' => 'Cafe Klang',
+                                'field_value' => 'Hotel Diavox',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Sub Title',
-                                'field_value' => 'your favourite coffee daily lives.',
+                                'field_value' => 'Your home, away from home.',
                                 'field_type' => 'text',
                             ],
                             [
@@ -329,7 +329,26 @@ class MainController extends Controller
                                 'field_key' => 'Right Button Link URL',
                                 'field_value' => '#',
                                 'field_type' => 'text',
-                            ]
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Background Image URL 01',
+                                'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-01.jpg',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Background Image URL 02',
+                                'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-02.jpg',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Background Image URL 03',
+                                'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-03.jpg',
+                                'field_type' => 'text',
+                            ],
+
                         ];
                         break;
                     case 'About':
@@ -337,74 +356,74 @@ class MainController extends Controller
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Video Frame URL',
-                                'field_value' => 'templates/barista-cafe/videos/pexels-mike-jones-9046237.mp4',
+                                'field_value' => 'templates/hotel-diavox/videos/reception-talking-to-guest.mp4',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Video Frame Description',
-                                'field_value' => 'We Started Since 2009. Best Kahidlaw Kape in the City.',
+                                'field_value' => 'We Started Since 1932. The Best Hotel in the City',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Website',
-                                'field_value' => 'KapeKahidlaw.co',
+                                'field_value' => 'diavox.net',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Title',
-                                'field_value' => 'Kape Kahidlaw',
+                                'field_value' => 'Hotel Diavox',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Description',
                                 'field_value' => <<<HTML
-                                    <p class="text-white">The café had been in the town for as long as anyone could remember, and it had become a beloved institution among the locals.</p>
-                                    <p class="text-white">The café was run by a friendly and hospitable couple, Mr. and Mrs. Johnson. Barista Cafe is free Bootstrap 5 HTML layout provided by <a rel="nofollow" href="https://www.tooplate.com" target="_blank" draggable="false">Tooplate</a>.</p>
+                                    <p class="text-white">Your home, away from home.</p>
+                                    <p class="text-white">Built in 1932 by a visionary merchant who dreamed of bringing elegance to a quiet coastal town, the Seaside Manor began as a modest guesthouse for weary travelers and local fishermen.</p>
                                 HTML,
                                 'field_type' => 'html',
                             ]
                         ];
                         break;
-                    case 'Baristas':
+                    case 'Staff':
                         $blockFields = [
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Top Header',
-                                'field_value' => 'Creative Baristas',
+                                'field_value' => 'Creative People',
                                 'field_type' => 'text',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Header Title',
-                                'field_value' => 'Meet People',
+                                'field_value' => 'Meet Our Staff',
                                 'field_type' => 'text',
                             ]
                         ];
 
                         $blockFieldGroupsData = [
                             [
-                                'group_name' => 'Barista Cards',
+                                'group_name' => 'Staff Cards',
                                 'items' => [
-                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/portrait-elegant-old-man-wearing-suit.jpg', 'position' => 1],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/team/boss-of-hotel.png', 'position' => 1],
                                     ['field_name' => 'Name', 'field_value' => 'Steve', 'position' => 1],
                                     ['field_name' => 'Position', 'field_value' => 'Boss', 'position' => 1],
-                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily lives tempor', 'position' => 1],
-                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/cute-korean-barista-girl-pouring-coffee-prepare-filter-batch-brew-pour-working-cafe.jpg', 'position' => 2],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite main man. the boss!', 'position' => 1],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/team/cute-korean-barista-girl-pouring-coffee-prepare-filter-batch-brew-pour-working-cafe.jpg', 'position' => 2],
                                     ['field_name' => 'Name', 'field_value' => 'Sandra', 'position' => 2],
                                     ['field_name' => 'Position', 'field_value' => 'Manager', 'position' => 2],
-                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily lives.', 'position' => 2],
-                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/small-business-owner-drinking-coffee.jpg', 'position' => 3],
+                                    ['field_name' => 'Description', 'field_value' => 'your manager who will take care of you.', 'position' => 2],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/team/small-business-owner-drinking-coffee.jpg', 'position' => 3],
                                     ['field_name' => 'Name', 'field_value' => 'Jackson', 'position' => 3],
-                                    ['field_name' => 'Position', 'field_value' => 'Senior', 'position' => 3],
-                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee maximized.', 'position' => 3],
-                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/barista-cafe/images/team/smiley-business-woman-working-cashier.jpg', 'position' => 4],
+                                    ['field_name' => 'Position', 'field_value' => 'Reception', 'position' => 3],
+                                    ['field_name' => 'Description', 'field_value' => 'your favorite person to talk a lot with.', 'position' => 3],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/team/smiley-business-woman-working-cashier.jpg', 'position' => 4],
                                     ['field_name' => 'Name', 'field_value' => 'Michelle', 'position' => 4],
-                                    ['field_name' => 'Position', 'field_value' => 'Barista', 'position' => 4],
-                                    ['field_name' => 'Description', 'field_value' => 'your favorite coffee daily consectetur.', 'position' => 4],
+                                    ['field_name' => 'Position', 'field_value' => 'Room Service', 'position' => 4],
+                                    ['field_name' => 'Description', 'field_value' => 'the most patience person inside the hotel.', 'position' => 4],
                                 ]
                             ]
                         ];
@@ -414,7 +433,7 @@ class MainController extends Controller
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Background Image URL',
-                                'field_value' => 'templates/barista-cafe/images/happy-waitress-giving-coffee-customers-while-serving-them-coffee-shop.jpg',
+                                'field_value' => 'templates/hotel-diavox/images/happy-waitress-giving-coffee-customers-while-serving-them-coffee-shop.jpg',
                                 'field_type' => 'text',
                             ],
                             [
@@ -514,7 +533,81 @@ class MainController extends Controller
                             ]
                         ];
                         break;
+                    case 'Reviews':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Top Header',
+                                'field_value' => 'Reviews by Customers',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Header Title',
+                                'field_value' => 'Testimonials',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Card Header Background',
+                                'field_value' => 'templates/hotel-diavox/images/mid-section-waitress-wiping-espresso-machine-with-napkin-cafa-c.jpg',
+                                'field_type' => 'text',
+                            ]
+                        ];
+
+                        $blockFieldGroupsData = [
+                            [
+                                'group_name' => 'Review Cards',
+                                'items' => [
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/reviews/young-woman-with-round-glasses-yellow-sweater.jpg', 'position' => 1],
+                                    ['field_name' => 'Name', 'field_value' => 'Sandra', 'position' => 1],
+                                    ['field_name' => 'Title', 'field_value' => 'Customer', 'position' => 1],
+                                    ['field_name' => 'Testimonial', 'field_value' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'position' => 1],
+                                    ['field_name' => 'Rating', 'field_value' => '4.5', 'position' => 1],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/reviews/senior-man-white-sweater-eyeglasses.jpg', 'position' => 2],
+                                    ['field_name' => 'Name', 'field_value' => 'Dondon', 'position' => 2],
+                                    ['field_name' => 'Title', 'field_value' => 'Customer', 'position' => 2],
+                                    ['field_name' => 'Testimonial', 'field_value' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'position' => 2],
+                                    ['field_name' => 'Rating', 'field_value' => '3.0', 'position' => 2],
+                                    ['field_name' => 'Person Picture URL', 'field_value' => 'templates/hotel-diavox/images/reviews/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair.jpg', 'position' => 3],
+                                    ['field_name' => 'Name', 'field_value' => 'Olivia', 'position' => 3],
+                                    ['field_name' => 'Title', 'field_value' => 'Customer', 'position' => 3],
+                                    ['field_name' => 'Testimonial', 'field_value' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'position' => 3],
+                                    ['field_name' => 'Rating', 'field_value' => '5.0', 'position' => 3],
+                                ]
+                            ]
+                        ];
+                        break;
+                    case 'Contacts':
+                        $blockFields = [
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Top Header',
+                                'field_value' => 'Say Hello',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Header Title',
+                                'field_value' => 'Contact Us',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Mailto Email',
+                                'field_value' => 'test@test.com',
+                                'field_type' => 'text',
+                            ],
+                            [
+                                'block_id' => $block->id,
+                                'field_key' => 'Google Map iFrame Source URL',
+                                'field_value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d574.0786337340072!2d121.01612404659991!3d14.546263071356298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c9357b16c66f%3A0xa6d4083ca8ee93c5!2sHungry%20Homies%20-%20Chino%20Roces!5e0!3m2!1sen!2sph!4v1751424481100!5m2!1sen!2sph',
+                                'field_type' => 'text',
+                            ]
+                        ];
+                        break;
                 }
+
             default;
         }
 
@@ -530,7 +623,7 @@ class MainController extends Controller
         }
 
         // Ensure the blockFieldGroup and blockFieldGroupItems are not empty before creating them
-        if (!empty($blockFieldGroup) && !empty($blockFieldGroupItems)) {
+        if (!empty($blockFieldGroupsData)) {
             foreach ($blockFieldGroupsData as $groupData) {
                 $blockFieldGroup = BlockFieldGroup::create([
                     'block_id' => $block->id,

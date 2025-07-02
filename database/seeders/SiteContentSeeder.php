@@ -20,9 +20,9 @@ class SiteContentSeeder extends Seeder
         ]);
 
         $template = Template::create([
-            'name' => 'Barista Cafe',
-            'slug' => 'barista-cafe',
-            'desc' => 'This is the barista cafe template'
+            'name' => 'Hotel Diavox',
+            'slug' => 'hotel-diavox',
+            'desc' => 'This is the hotel diavox template'
         ]);
 
         $template = Template::create([
