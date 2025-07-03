@@ -172,7 +172,7 @@ class MainController extends Controller
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Image URL',
                                 'field_value' => 'templates/hotel-diavox/images/diavox-logo-small.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
                             [
                                 'block_id' => $block->id,
@@ -246,7 +246,7 @@ class MainController extends Controller
                                 'block_id' => $block->id,
                                 'field_key' => 'Logo Image URL',
                                 'field_value' => 'templates/hotel-diavox/images/diavox-logo-small.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
                             [
                                 'block_id' => $block->id,
@@ -334,19 +334,19 @@ class MainController extends Controller
                                 'block_id' => $block->id,
                                 'field_key' => 'Background Image URL 01',
                                 'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-01.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Background Image URL 02',
                                 'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-02.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
                             [
                                 'block_id' => $block->id,
                                 'field_key' => 'Background Image URL 03',
                                 'field_value' => 'templates/hotel-diavox/images/bg-hotel-diavox-03.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
 
                         ];
@@ -434,7 +434,7 @@ class MainController extends Controller
                                 'block_id' => $block->id,
                                 'field_key' => 'Background Image URL',
                                 'field_value' => 'templates/hotel-diavox/images/happy-waitress-giving-coffee-customers-while-serving-them-coffee-shop.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ],
                             [
                                 'block_id' => $block->id,
@@ -551,7 +551,7 @@ class MainController extends Controller
                                 'block_id' => $block->id,
                                 'field_key' => 'Card Header Background',
                                 'field_value' => 'templates/hotel-diavox/images/mid-section-waitress-wiping-espresso-machine-with-napkin-cafa-c.jpg',
-                                'field_type' => 'text',
+                                'field_type' => 'file',
                             ]
                         ];
 

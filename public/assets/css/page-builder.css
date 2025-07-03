@@ -280,6 +280,49 @@ textarea.modal-input {
     height: 12rem;
 }
 
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* 2 columns as you wrote */
+    gap: 10px;
+    max-height: 75%;
+    /* fix height */
+    overflow-y: auto;
+    /* vertical scroll if overflow */
+    padding-right: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* room for scrollbar */
+}
+
+#galleryGrid .gallery-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #f9f9f9;
+}
+
+#galleryGrid .gallery-item img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 100%;
+    max-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+}
+
+.gallery-loader {
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+}
+
 .select-primary {
     flex: 1;
     max-width: 200px;

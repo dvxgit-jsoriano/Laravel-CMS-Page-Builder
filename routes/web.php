@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetLibraryController;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,6 @@ Route::delete('delete-block', [MainController::class, 'deleteBlock'])->name('del
 Route::post('update-block', [MainController::class, 'updateBlock'])->name('updateBlock');
 
 Route::get('get-block-set', [MainController::class, 'getBlockSet'])->name('getBlockSet');
+
+Route::post('upload-asset-library', [AssetLibraryController::class, 'uploadAssetLibrary'])->name('uploadAssetLibrary');
+Route::get('get-asset-library', [AssetLibraryController::class, 'getAssetLibrary'])->name('getAssetLibrary');

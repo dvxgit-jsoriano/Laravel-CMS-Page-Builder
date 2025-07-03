@@ -239,7 +239,7 @@ function getBlockTemplateFromServer(templateName, blockData) {
                             <nav class="navbar navbar-expand-lg">
                                 <div class="container">
                                     <a class="navbar-brand d-flex align-items-center" href="#">
-                                        <img src="${getFieldValue('Logo Image URL')}" class="me-2" alt="Hotel Diavox Template">
+                                        <img src="${getFieldValue('Logo Image URL')}" class="me-2" alt="Hotel Diavox Template" style="width: 40px;">
                                         ${getFieldValue('Logo Title')}
                                     </a>
                                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

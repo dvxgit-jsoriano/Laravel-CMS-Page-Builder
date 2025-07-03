@@ -152,6 +152,28 @@
         </div>
     </div>
 
+    <!-- Modal overlay -->
+    <div id="modalAssetLibrary" class="modal-overlay" style="z-index: 1000002;">
+        <div class="modal-box" style="width: 80%;">
+            <span class="modal-close-x" data-target="modalAssetLibrary" onclick="closeModal(this)">&times;</span>
+            <h2 class="section-title">Asset Library</h2>
+
+            <div class="modal-body">
+                <div id="galleryGrid" class="gallery-grid">
+                    <!-- images will be dynamically loaded here -->
+                </div>
+                <div id="galleryLoader" class="gallery-loader">
+                    <em>Loading...</em>
+                </div>
+            </div>
+            <div class="canvas-buttons">
+                <button class="pb-btn-danger" data-target="modalAssetLibrary" onclick="selectAsset(this)">Select</button>
+                <button class="modal-close-btn" data-target="modalAssetLibrary" onclick="closeModal(this)">Close</button>
+            </div>
+        </div>
+    </div>
+
+
     <div id="grouped-scripts" style="display:none;">
         @include('layouts.template-scripts')
     </div>
@@ -171,6 +193,12 @@
         var globalBlockId;
         var pageData;
         var previousTemplateId;
+        var selectedAssetSrc = null;
+        var currentTargetHiddenInput = null;
+
+        var currentGalleryPage = 1;
+        var galleryLoading = false;
+        var galleryHasMore = true;
 
         function getSiteInfo() {
             siteId = $("#select-site").val();
@@ -403,6 +431,25 @@
             $('#' + targetId).show(); // or your custom modal open logic
         }
 
+        function openAssetLibraryModal(triggerEl) {
+            let targetId = $(triggerEl).data('target');
+            let templateId = globalTemplateId;
+            let fieldId = $(triggerEl).data('hidden-input'); // this is the numeric ID
+
+            currentTargetHiddenInput = `hidden-input-${fieldId}`;
+
+            // reset gallery state
+            galleryHasMore = true;
+            galleryLoading = false;
+            $('#galleryGrid').empty(); // clear old items
+            $('#galleryLoader').hide(); // hide loader
+
+            // load page 1 fresh
+            loadAssetLibraryPage(1);
+
+            $('#' + targetId).show(); // or your custom modal open logic
+        }
+
         function populateModalBody(data, targetId) {
             const body = $('#' + targetId + ' .modal-body');
 
@@ -455,7 +502,23 @@
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <input data-id="${field.id}" type="file" data-field-key="${field.field_key}" data-field-type="${field.field_type}" value="${field.field_value}" class="modal-input" />
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" class="pb-btn-add-group-item ms-2" style="flex:1; background:#007bff; color:white;"
+                                        data-target="modalAssetLibrary"
+                                        data-hidden-input="${field.id}"
+                                        onclick="openAssetLibraryModal(this);">
+                                        Select From Gallery
+                                    </button>
+                                    <input id="hidden-input-${field.id}" data-id="${field.id}" type="hidden" data-field-key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                                    <input type="file" class="modal-input" style="flex:2;"
+                                    />
+                                    <button type="button" class="pb-btn-add-group-item"
+                                        style="flex:1; background:#28a745; color:white;"
+                                        data-field-id="${field.id}"
+                                        onclick="uploadAssetLibraryFile(this, ${field.id})">
+                                        Upload
+                                    </button>
+                                </div>
                             </div>`;
                         break;
                     case 'html':
@@ -539,6 +602,139 @@
             });
 
             initDynamicEditors(); // initialize after HTML is rendered
+        }
+
+        function loadAssetLibraryPage(page = 1) {
+            if (galleryLoading) return; // no more hasMore needed for button
+
+            galleryLoading = true;
+            $('#galleryLoader').show();
+
+            $.ajax({
+                url: '/get-asset-library',
+                method: 'GET',
+                data: {
+                    template_id: globalTemplateId,
+                    page: page
+                },
+                success: function(response) {
+                    const assets = response.data;
+
+                    if (assets.length === 0) {
+                        // no assets found at all
+                        $('#galleryGrid').append(`
+                            <div style="grid-column: 1/-1; text-align:center; padding:20px;">
+                                No images found.
+                            </div>
+                        `);
+                    } else {
+                        assets.forEach(asset => {
+                            $('#galleryGrid').append(`
+                                <div class="gallery-item"
+                                    style="border:1px solid #ddd; padding:5px; cursor:pointer;"
+                                    data-src="${asset.src}"
+                                    onclick="selectGalleryItem(this)">
+                                    <img src="${asset.src}" style="width:100%; border-radius:5px;">
+                                </div>
+                            `);
+                        });
+                    }
+
+                    // remove existing Load More button if any
+                    $('#galleryGrid .gallery-load-more').remove();
+
+                    if (response.current_page < response.last_page) {
+                        // there is more to load
+                        $('#galleryGrid').append(`
+                            <div class="gallery-load-more" style="grid-column: 1/-1; text-align:center; margin:10px 0;">
+                                <button type="button" style="padding:8px 16px; background:#007bff; color:#fff; border:none; border-radius:5px;"
+                                    onclick="loadAssetLibraryPage(${response.current_page + 1})">
+                                    Load More
+                                </button>
+                            </div>
+                        `);
+                    }
+                },
+                error: function(err) {
+                    console.error(err);
+                },
+                complete: function() {
+                    galleryLoading = false;
+                    $('#galleryLoader').hide();
+                }
+            });
+        }
+
+        function uploadAssetLibraryFile(triggerEl, fieldId) {
+            const container = $(triggerEl).closest('.modal-field-group');
+            const fileInput = container.find('input[type="file"]')[0];
+
+            console.log("Uploading file for field ID:", fieldId);
+            console.log("File input element:", fileInput);
+
+            if (!fileInput || !fileInput.files.length) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            let formData = new FormData();
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            formData.append('template_id', globalTemplateId);
+            formData.append('file', file);
+
+            $.ajax({
+                url: '/upload-asset-library',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        alert("Upload successful!");
+                        // update the hidden input with the returned image path
+                        $(`#hidden-input-${fieldId}`).val(response.asset.src);
+                    } else {
+                        alert("Upload failed.");
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    alert("Something went wrong while uploading.");
+                }
+            });
+        }
+
+        function selectGalleryItem(el) {
+            // remove outline from other items
+            $('#galleryGrid .gallery-item').css('outline', 'none');
+
+            // add highlight to selected
+            $(el).css('outline', '3px solid #007bff');
+
+            // store globally
+            selectedAssetSrc = $(el).data('src');
+
+            console.log('Selected asset:', selectedAssetSrc);
+        }
+
+        function selectAsset(triggerEl) {
+            if (!selectedAssetSrc) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            if (!currentTargetHiddenInput) {
+                console.error('No target hidden input set.');
+                return;
+            }
+
+            $('#' + currentTargetHiddenInput).val(selectedAssetSrc);
+
+            console.log('Saved to hidden input:', currentTargetHiddenInput, selectedAssetSrc);
+
+            closeModal(triggerEl);
         }
 
         function saveChanges(triggerEl) {
