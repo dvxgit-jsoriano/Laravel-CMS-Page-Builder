@@ -28,7 +28,7 @@ class BlockListLoader {
         group.block_field_group_items.forEach(item => {
             const pos = item.position;
             if (!grouped[pos]) grouped[pos] = {};
-            grouped[pos][item.field_name] = item.field_value;
+            grouped[pos][item.field_key] = item.field_value;
         });
 
         return Object.values(grouped);

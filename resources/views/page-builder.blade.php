@@ -196,6 +196,7 @@
         var previousTemplateId;
         var selectedAssetSrc = null;
         var currentTargetHiddenInput = null;
+        var currentTargetHiddenGroupInput = null;
 
         var currentGalleryPage = 1;
         var galleryLoading = false;
@@ -442,9 +443,19 @@
         function openAssetLibraryModal(triggerEl) {
             let targetId = $(triggerEl).data('target');
             let templateId = globalTemplateId;
-            let fieldId = $(triggerEl).data('hidden-input'); // this is the numeric ID
+
+            let fieldId = null;
+            if ($(triggerEl).data('hidden-input'))
+                fieldId = $(triggerEl).data('hidden-input');
+            if ($(triggerEl).data('hidden-group-input'))
+                fieldId = $(triggerEl).data('hidden-group-input');
 
             currentTargetHiddenInput = `hidden-input-${fieldId}`;
+            currentTargetHiddenGroupInput = `hidden-group-input-${fieldId}`;
+
+            console.log("************************");
+            console.log(currentTargetHiddenInput);
+            console.log(currentTargetHiddenGroupInput);
 
             // reset gallery state
             galleryHasMore = true;
@@ -466,11 +477,12 @@
 
                 const baseAttrs = `
                         id="${field.id}"
+                        data-id="${field.id}"
                         class="modal-input ${isHtml ? ' dynamic-editor' : ''}"
-                        data-field-type="group-item"
+                        data-group="true"
                         data-group-id="${groupId}"
                         data-position="${position}"
-                        data-field-name="${field.field_name}"
+                        data-field-key="${field.field_key}"
                     `;
 
                 switch (field.field_type) {
@@ -481,7 +493,28 @@
                     case 'html':
                         return `<div ${baseAttrs}>${field.field_value}</div>`;
                     case 'file':
-                        return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
+                        //return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" class="pb-btn-add-group-item ms-2" style="flex:1; background:#007bff; color:white;"
+                                        data-target="modalAssetLibrary"
+                                        data-hidden-group-input="${field.id}"
+                                        onclick="openAssetLibraryModal(this);">
+                                        Select From Gallery
+                                    </button>
+                                    <input id="hidden-group-input-${field.id}" data-id="${field.id}" type="hidden" data-field-key="${field.field_key}" value="${field.field_value}" data-position="${position}" class="modal-input" data-group="true" />
+                                    <input type="file" class="modal-input" style="flex:2;"/>
+                                    <button type="button" class="pb-btn-add-group-item"
+                                        style="flex:1; background:#28a745; color:white;"
+                                        data-field-id="${field.id}"
+                                        onclick="uploadAssetLibraryFile(this, ${field.id})">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
+                        `;
                     case 'select':
                         return `<select ${baseAttrs}>
                         <option>Option 1</option>
@@ -503,7 +536,7 @@
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <input data-id="${field.id}" type="text" data-field-key="${field.field_key}" data-field-type="${field.field_type}" value="${field.field_value}" class="modal-input" />
+                                <input data-id="${field.id}" type="text" data-single="true" data-field-key="${field.field_key}" data-field-type="${field.field_type}" value="${field.field_value}" class="modal-input" />
                             </div>`;
                         break;
                     case 'file':
@@ -517,7 +550,7 @@
                                         onclick="openAssetLibraryModal(this);">
                                         Select From Gallery
                                     </button>
-                                    <input id="hidden-input-${field.id}" data-id="${field.id}" type="hidden" data-field-key="${field.field_key}" value="${field.field_value}" class="modal-input" />
+                                    <input id="hidden-input-${field.id}" data-id="${field.id}" type="hidden" data-field-key="${field.field_key}" value="${field.field_value}" class="modal-input" data-single="true" />
                                     <input type="file" class="modal-input" style="flex:2;"
                                     />
                                     <button type="button" class="pb-btn-add-group-item"
@@ -533,19 +566,19 @@
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <div data-id="${field.id}" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input dynamic-editor">${field.field_value}</div>
+                                <div data-id="${field.id}" data-single="true" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input dynamic-editor">${field.field_value}</div>
                             </div>`;
                         break;
                     case 'textarea':
                         htmlElement = `
                             <div class="modal-field-group">
                                 <label for="${field.field_key}">${field.field_key}</label>
-                                <textarea data-id="${field.id}" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input">${field.field_value}</textarea>
+                                <textarea data-id="${field.id}" data-single="true" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input">${field.field_value}</textarea>
                             </div>`;
                         break;
                     case 'select':
                         htmlElement = `
-                            <div class="modal-group-input">
+                            <div class="modal-group-input" data-single="true">
                                 <select class="modal-input">
                                     <option>Test 1</option>
                                     <option>Test 2</option>
@@ -588,9 +621,14 @@
                 Object.entries(groupedItems).forEach(([pos, fields]) => {
                     const li = $('<li style="margin-bottom: 1rem;"></li>');
                     fields.forEach(field => {
+                        /* li.append(`
+                        <div class="modal-field-group">
+                            <label>${field.field_key}</label>
+                            ${renderFieldInput(field, groupId, pos)}
+                        </div>
+                    `); */
                         li.append(`
                             <div class="modal-field-group">
-                                <label>${field.field_name}</label>
                                 ${renderFieldInput(field, groupId, pos)}
                             </div>
                         `);
@@ -738,9 +776,16 @@
                 return;
             }
 
+            if (!currentTargetHiddenGroupInput) {
+                console.error('No target hidden input set.');
+                return;
+            }
+
             $('#' + currentTargetHiddenInput).val(selectedAssetSrc);
+            $('#' + currentTargetHiddenGroupInput).val(selectedAssetSrc);
 
             console.log('Saved to hidden input:', currentTargetHiddenInput, selectedAssetSrc);
+            console.log('Saved to hidden group input:', currentTargetHiddenGroupInput, selectedAssetSrc);
 
             closeModal(triggerEl);
         }
@@ -756,8 +801,7 @@
             const block_field_groups = [];
 
             // 1️⃣ Collect simple block_fields
-            modal.find('.modal-input[data-field-key]').each(function() {
-                console.log("FIELD TYPE!", $(this).data('field-type'));
+            modal.find('.modal-input[data-single]').each(function() {
                 const field = {
                     id: $(this).data('id'),
                     field_key: $(this).data('field-key'),
@@ -776,13 +820,13 @@
                 const items = [];
 
                 $(this).find('li').each(function() {
-                    const position = $(this).find('.modal-input').first().data(
+                    const position = $(this).find('.modal-input[data-group]').first().data(
                         'position'); // assume all fields in same li share same position
 
-                    $(this).find('.modal-input').each(function() {
+                    $(this).find('.modal-input[data-group]').each(function() {
                         items.push({
-                            id: $(this).attr('id'),
-                            field_name: $(this).data('field-name'),
+                            id: $(this).data('id'),
+                            field_key: $(this).data('field-key'),
                             field_value: $(this).val(),
                             position: position
                         });
@@ -805,8 +849,8 @@
 
             // 3️⃣ Send AJAX request to Laravel
             $.ajax({
-                url: '{{ route('updateBlock') }}', // <-- you will replace this with your Laravel route
-                type: 'POST',
+                url: "{{ route('updateBlock') }}", // <-- you will replace this with your Laravel route
+                type: "POST",
                 data: {
                     _token: '{{ csrf_token() }}',
                     payload: JSON.stringify(payload)

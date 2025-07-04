@@ -200,9 +200,9 @@ class MainController extends Controller
                 foreach ($groupData['items'] as $item) {
                     BlockFieldGroupItem::create([
                         'block_field_group_id' => $blockFieldGroup->id,
-                        'field_name' => $item['field_name'],
+                        'field_key' => $item['field_key'],
                         'field_value' => $item['field_value'],
-                        'field_type' => 'text',
+                        'field_type' => $item['field_type'],
                         'position' => $item['position'] ?? 0,
                     ]);
                 }
@@ -273,7 +273,7 @@ class MainController extends Controller
                     'items' => $group->block_field_group_items->map(function ($item) {
                         return [
                             'id' => $item->id,
-                            'field_name' => $item->field_name,
+                            'field_key' => $item->field_key,
                             'field_value' => $item->field_value,
                             'field_type' => $item->field_type,
                             'position' => $item->position,
@@ -326,7 +326,7 @@ class MainController extends Controller
                     $groupItem = BlockFieldGroupItem::find($item['id']);
                     if ($groupItem) {
                         //$groupItem->group_name = $groupName;
-                        $groupItem->field_name = $item['field_name'];
+                        $groupItem->field_key = $item['field_key'];
                         $groupItem->field_value = $item['field_value'];
                         $groupItem->position = $item['position'];
                         $groupItem->save();

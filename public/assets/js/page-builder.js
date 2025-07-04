@@ -37,8 +37,7 @@ $(document).ready(function () {
             let response = createBlock(type);
 
             const blockData = response;
-            console.log(blockData);
-            console.log(blockData.type);
+            console.log('BLOCKDATA', blockData);
 
             const blockListLoader = new BlockListLoader();
             const blockHTML = blockListLoader.getBlockTemplateFromServer(globalTemplateName, blockData);
