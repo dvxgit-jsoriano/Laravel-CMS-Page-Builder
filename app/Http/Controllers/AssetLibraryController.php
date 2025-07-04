@@ -11,61 +11,8 @@ use Illuminate\Support\Facades\Storage;
 class AssetLibraryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Upload Asset Library
      */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(AssetLibrary $assetLibrary)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AssetLibrary $assetLibrary)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, AssetLibrary $assetLibrary)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AssetLibrary $assetLibrary)
-    {
-        //
-    }
-
     public function uploadAssetLibrary(Request $request)
     {
         $request->validate([
@@ -100,6 +47,9 @@ class AssetLibraryController extends Controller
         ]);
     }
 
+    /**
+     * Get Asset Library by 10
+     */
     public function getAssetLibrary(Request $request)
     {
         $request->validate([
