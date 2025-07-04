@@ -353,7 +353,7 @@ textarea.modal-input {
 /* Canvas Area */
 .canvas-content {
     border: 2px dashed #ccc;
-    min-height: 600px;
+    min-height: 800px;
     padding: .25rem;
     border-radius: 6px;
     background-color: #fafafa;

@@ -68,10 +68,10 @@
                     <img src="{{ asset('assets/images/llF5iyg.gif') }}" class="loading-img">
                 </div>
             </div>
-            <div>
+            {{-- <div>
                 <textarea id="txtDisplay" rows="4"
                     style="width: 100%; border: solid 1px #CCCCCC; margin-top: 1rem; font-size:9px;"></textarea>
-            </div>
+            </div> --}}
         </section>
     </main>
 
@@ -424,7 +424,7 @@
                 }
             });
 
-            $('#txtDisplay').val(JSON.stringify(fields, null, 2));
+            //$('#txtDisplay').val(JSON.stringify(fields, null, 2));
 
             populateModalBody(fields, targetId);
             $('#' + targetId).show(); // or your custom modal open logic
