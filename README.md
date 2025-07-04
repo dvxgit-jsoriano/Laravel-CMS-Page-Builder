@@ -1,61 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Page Builder
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A lightweight and developer-friendly CMS module built with Laravel and jQuery, using custom CSS (no Tailwind or Bootstrap). This tool is designed to be easily integrated into existing Laravel applications that need simple content management capabilities.
 
-## About Laravel
+## Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Built with Laravel: Leverages Laravel's powerful framework and includes migration tables for quick integration.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Custom Page Builder: Drag-and-drop inspired CMS interface using jQuery and custom CSS—no external UI frameworks required.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Modular Integration: Designed to plug into existing apps for adding CMS capabilities without starting from scratch.
 
-## Learning Laravel
+- Site & Template Selection: Easily create pages by selecting a site and assigning a template.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Customizable Templates: Developers can add, modify, or import their own HTML templates—fully customizable structure and style.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Flexible Asset Management:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+  - Customize styles and scripts using the includes section.
 
-## Laravel Sponsors
+  - Centralized asset library with image upload and selection support.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Content Editing:
 
-### Premium Partners
+  - Page form allows inline editing of text fields like titles and image sources.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+  - Clean separation of content and layout for maintainability.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Developer-Focused
 
-## Code of Conduct
+- Add new templates by simply uploading or defining them in your preferred structure.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Full control over design, logic, and asset management.
 
-## Security Vulnerabilities
+- Built for extensibility—ideal for apps that want embedded CMS capabilities without bloated overhead.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+## Database Structures - Migration Information
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `templates` - Stores all available page templates. Each template defines the layout structure that can be reused for creating pages.
+- `sites` - Represents different websites or instances a user can manage. Allows multi-site support, where each site belongs to a specific user.
+- `pages` - Used for storing individual pages created under a site. Each page can be assigned a specific template and can be marked as the landing page.
+- `blocks` - Stores modular blocks that make up the content of a page. Each block has a type and position for sorting on the page.
+- `block_fields` - Stores editable fields for each block (e.g., title, image source). Each field has a key, value, and field type.
+- `block_field_groups` - Groups multiple field items under a block. Useful for repeatable structured content like testimonials, pricing tables, or FAQ sections.
+- `block_field_group_items` - Stores individual items within a field group. Each item includes a name, value, type, and position for ordering.
+- `asset_libraries` - Stores uploaded assets (e.g., images) linked to specific templates. Used in the asset selector for reusing media across blocks.
+
+## Screenshots
+
+- Main Page
+![Main Page](documents/images/main_page.png)
+
+- Preview Page
+![Preview Page](documents/images/preview_page.png)
+
+## Developer
+
+- [Jerome Soriano](https://github.com/dvxgit-jsoriano)
+
+*"Feel free to read, use, and apply to your projects."*
+
+## Credits
+
+- Thanks to tooplate -> [Barista Cafe](https://www.tooplate.com/view/2137-barista-cafe) for an awesome template.
