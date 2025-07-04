@@ -40,7 +40,8 @@ $(document).ready(function () {
             console.log(blockData);
             console.log(blockData.type);
 
-            const blockHTML = getBlockTemplateFromServer(globalTemplateName, blockData);
+            const blockListLoader = new BlockListLoader();
+            const blockHTML = blockListLoader.getBlockTemplateFromServer(globalTemplateName, blockData);
 
             const wrapper = document.createElement('div');
             wrapper.innerHTML = blockHTML;

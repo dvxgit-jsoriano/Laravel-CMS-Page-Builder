@@ -163,6 +163,10 @@ class MainController extends Controller
         ]);
 
         // Dynamically resolve class from template name
+        /**
+         * Existing Templates
+         * - Hotel Diavox
+         */
         $templateClass = 'App\\Templates\\' . str_replace(' ', '', $templateName);
 
         if (class_exists($templateClass)) {

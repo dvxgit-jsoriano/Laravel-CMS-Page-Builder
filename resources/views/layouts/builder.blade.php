@@ -10,9 +10,6 @@
     <!-- Page Builder required assets -->
     <link rel="stylesheet" href="{{ asset('assets/css/page-builder.css') }}">
 
-    <!-- Dynamically load assets depending on the template selected... -->
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
-
     @stack('styles')
 
     @stack('scripts')

@@ -16,8 +16,8 @@
                     id="profileBtn">
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="#">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="#">Logout</a>
+                    {{-- <a href="#">Settings</a>
+                    <a href="#">Logout</a> --}}
                 </div>
             </div>
         </div>
@@ -178,6 +178,7 @@
         @include('layouts.template-scripts')
     </div>
 
+    <!-- Include BlockListLoader.js -->
     <script src="assets/js/BlockListLoader.js"></script>
 
     <script>
@@ -220,7 +221,8 @@
             globalSiteId = {{ $site->id }};
 
             // Call function loadBlocksPerTemplate(), this loads the components or blocks of the selected template.
-            loadBlocksPerTemplate(globalTemplateName);
+            let blockListLoader = new BlockListLoader();
+            blockListLoader.loadBlocksPerTemplate(globalTemplateName);
 
             $("#select-page").on("change", function() {
                 // Do this to refresh the page layout....
@@ -232,6 +234,7 @@
     </script>
 
     <script>
+        /** For the profile button and dropdown */
         const profileBtn = document.getElementById('profileBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -244,7 +247,9 @@
                 dropdownMenu.classList.remove('show');
             }
         });
+    </script>
 
+    <script>
         function fetchPageData(page) {
             $.ajax({
                 type: "GET",
@@ -285,7 +290,8 @@
             fetchPageData(globalPageId);
             $('#sortable-list').children().not('#loading-overlay').remove();
             pageData.blocks.forEach(element => {
-                let blockHTML = getBlockTemplateFromServer(globalTemplateName, element);
+                let blockListLoader = new BlockListLoader();
+                let blockHTML = blockListLoader.getBlockTemplateFromServer(globalTemplateName, element);
                 $("#sortable-list").append(blockHTML);
             });
         }
@@ -387,7 +393,9 @@
                     // Empty the page layout excluding the loading-overlay
                     $('#sortable-list').children().not('#loading-overlay').remove();
                     pageData.blocks.forEach(element => {
-                        let blockHTML = getBlockTemplateFromServer(globalTemplateName, element);
+                        let blockListLoader = new BlockListLoader();
+                        let blockHTML = blockListLoader.getBlockTemplateFromServer(globalTemplateName,
+                            element);
                         $("#sortable-list").append(blockHTML);
                     });
 
