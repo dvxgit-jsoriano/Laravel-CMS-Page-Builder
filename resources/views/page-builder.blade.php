@@ -453,10 +453,6 @@
             currentTargetHiddenInput = `hidden-input-${fieldId}`;
             currentTargetHiddenGroupInput = `hidden-group-input-${fieldId}`;
 
-            console.log("************************");
-            console.log(currentTargetHiddenInput);
-            console.log(currentTargetHiddenGroupInput);
-
             // reset gallery state
             galleryHasMore = true;
             galleryLoading = false;
