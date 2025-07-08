@@ -215,6 +215,39 @@ class MainController extends Controller
         return response()->json($block);
     }
 
+    public function createBlockFieldGroupItem(Request $request)
+    {
+        $groupId = $request->groupId;
+
+        // I need to double check if the blockFieldGroupItem() has any items.
+        if (BlockFieldGroupItem::where('block_field_group_id', $groupId)->count() == 0) {
+            return response()->json(['message' => 'No items found for this block field group.'], 404);
+        }
+
+        // Get the max position for the block field group items
+        $maxPos = BlockFieldGroupItem::where('block_field_group_id', $groupId)->max('position') ?? 0;
+        $maxPos++;
+
+        // I need to get the records from  block field group item with position 1
+        $groupItemsPositionFirst = BlockFieldGroupItem::where('block_field_group_id', $groupId)
+            ->where('position', 1)
+            ->get();
+
+        if ($groupItemsPositionFirst->isNotEmpty()) {
+            foreach ($groupItemsPositionFirst as $item) {
+                BlockFieldGroupItem::create([
+                    'block_field_group_id' => $item->block_field_group_id,
+                    'field_key' => $item->field_key,
+                    'field_value' => '', // Reset value
+                    'field_type' => $item->field_type,
+                    'position' => $maxPos,
+                ]);
+            }
+        }
+
+        return response()->json(['success' => true, 'position' => $maxPos, 'message' => 'Block field group item created successfully.']);
+    }
+
     public function getPages($siteId, Request $request)
     {
         $templateId = $request->templateId;

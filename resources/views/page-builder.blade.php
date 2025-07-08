@@ -592,12 +592,13 @@
 
             // 2. Render grouped fields
             data.block_field_groups.forEach(group => {
+                const blockFieldGroupId = group.id;
                 const groupId = group.group_name.toLowerCase().replace(/\s+/g, '-');
                 const groupWrapper = $(`
                         <div class="modal-field-group" style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label style="font-weight:bold;">${group.group_name}</label>
-                                <button type="button" class="pb-btn-add-group-item" data-group-id="${groupId}">Add</button>
+                                <button type="button" class="pb-btn-add-group-item" data-block-field-group-id="${blockFieldGroupId}" data-group-id="${groupId}" onclick="createNewBlockFieldGroupItem(this);">Add</button>
                             </div>
                             <ul class="group-field-list" data-group-id="${groupId}" style="margin-top: 1rem;"></ul>
                         </div>
@@ -862,6 +863,26 @@
             });
 
             closeModal(triggerEl);
+        }
+
+        function createNewBlockFieldGroupItem(el) {
+            const groupId = $(el).data('block-field-group-id');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('createBlockFieldGroupItem') }}",
+                async: false,
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    "groupId": groupId,
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.error(response);
+                }
+            });
         }
     </script>
 

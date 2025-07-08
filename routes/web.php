@@ -27,6 +27,7 @@ Route::post('create-site', [MainController::class, 'createSite'])->name('createS
 Route::get('get-templates', [MainController::class, 'fetchTemplates'])->name('getTemplates');
 Route::get('get-pages/{siteId}', [MainController::class, 'getPages'])->name('getPages');
 Route::post('create-page', [MainController::class, 'createPage'])->name('createPage');
+Route::post('create-block-field-group-item', [MainController::class, 'createBlockFieldGroupItem'])->name('createBlockFieldGroupItem');
 Route::post('set-template-to-site', [MainController::class, 'setTemplateToSite'])->name('setTemplateToSite');
 Route::post('update-block-positions', [MainController::class, 'updateBlockPositions'])->name('updateBlockPositions');
 Route::delete('delete-block', [MainController::class, 'deleteBlock'])->name('deleteBlock');
