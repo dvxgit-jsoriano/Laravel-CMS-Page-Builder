@@ -32,6 +32,7 @@ Route::post('set-template-to-site', [MainController::class, 'setTemplateToSite']
 Route::post('update-block-positions', [MainController::class, 'updateBlockPositions'])->name('updateBlockPositions');
 Route::delete('delete-block', [MainController::class, 'deleteBlock'])->name('deleteBlock');
 Route::post('update-block', [MainController::class, 'updateBlock'])->name('updateBlock');
+Route::delete('delete-block-field-group-items', [MainController::class, 'deleteBlockFieldGroupItems'])->name('deleteBlockFieldGroupItems');
 
 Route::get('get-block-set', [MainController::class, 'getBlockSet'])->name('getBlockSet');
 

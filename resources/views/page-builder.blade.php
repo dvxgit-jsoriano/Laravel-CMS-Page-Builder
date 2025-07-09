@@ -483,11 +483,26 @@
 
                 switch (field.field_type) {
                     case 'text':
-                        return `<input type="text" value="${field.field_value}" ${baseAttrs} />`;
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <input type="text" value="${field.field_value}" ${baseAttrs} />
+                            </div>
+                        `;
                     case 'textarea':
-                        return `<textarea ${baseAttrs}>${field.field_value}</textarea>`;
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <textarea ${baseAttrs}>${field.field_value}</textarea>
+                            </div>
+                        `;
                     case 'html':
-                        return `<div ${baseAttrs}>${field.field_value}</div>`;
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <div ${baseAttrs}>${field.field_value}</div>
+                            </div>
+                        `;
                     case 'file':
                         //return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
                         return `
@@ -618,12 +633,6 @@
                 Object.entries(groupedItems).forEach(([pos, fields]) => {
                     const li = $('<li style="margin-bottom: 1rem;"></li>');
                     fields.forEach(field => {
-                        /* li.append(`
-                        <div class="modal-field-group">
-                            <label>${field.field_key}</label>
-                            ${renderFieldInput(field, groupId, pos)}
-                        </div>
-                    `); */
                         li.append(`
                             <div class="modal-field-group">
                                 ${renderFieldInput(field, groupId, pos)}
@@ -634,7 +643,7 @@
                     // Optional Delete button
                     li.append(`
                         <div style="text-align:right;">
-                            <button type="button" class="pb-btn-delete-group-item" data-group-id="${groupId}" data-position="${pos}">Delete</button>
+                            <button type="button" class="pb-btn-delete-group-item" data-group-id="${blockFieldGroupId}" data-position="${pos}" onclick="deleteGroupItems(this);">Delete</button>
                         </div>
                     `);
 
@@ -866,7 +875,78 @@
         }
 
         function createNewBlockFieldGroupItem(el) {
-            const groupId = $(el).data('block-field-group-id');
+            const renderFieldInput = (field, groupId = '', position = '') => {
+                const isHtml = field.field_type === 'html';
+
+                const baseAttrs = `
+                        id="${field.id}"
+                        data-id="${field.id}"
+                        class="modal-input ${isHtml ? ' dynamic-editor' : ''}"
+                        data-group="true"
+                        data-group-id="${groupId}"
+                        data-position="${position}"
+                        data-field-key="${field.field_key}"
+                    `;
+
+                switch (field.field_type) {
+                    case 'text':
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <input type="text" value="${field.field_value}" ${baseAttrs} />
+                            </div>
+                        `;
+                    case 'textarea':
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <textarea ${baseAttrs}>${field.field_value}</textarea>
+                            </div>
+                        `;
+                    case 'html':
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <div ${baseAttrs}>${field.field_value}</div>
+                            </div>
+                        `;
+                    case 'file':
+                        //return `<input type="file" value="${field.field_value}" ${baseAttrs} />`;
+                        return `
+                            <div class="modal-field-group">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" class="pb-btn-add-group-item ms-2" style="flex:1; background:#007bff; color:white;"
+                                        data-target="modalAssetLibrary"
+                                        data-hidden-group-input="${field.id}"
+                                        onclick="openAssetLibraryModal(this);">
+                                        Select From Gallery
+                                    </button>
+                                    <input id="hidden-group-input-${field.id}" data-id="${field.id}" type="hidden" data-field-key="${field.field_key}" value="${field.field_value}" data-position="${position}" class="modal-input" data-group="true" />
+                                    <input type="file" class="modal-input" style="flex:2;"/>
+                                    <button type="button" class="pb-btn-add-group-item"
+                                        style="flex:1; background:#28a745; color:white;"
+                                        data-field-id="${field.id}"
+                                        onclick="uploadAssetLibraryFile(this, ${field.id})">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    case 'select':
+                        return `<select ${baseAttrs}>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                    </select>`;
+                    default:
+                        return '';
+                }
+            };
+
+            const $btn = $(el);
+            const blockFieldGroupId = $btn.data('block-field-group-id'); // numeric ID
+            const groupId = $btn.data('group-id'); // slugified name (used in data-group-id)
+            const $list = $(`.group-field-list[data-group-id="${groupId}"]`);
 
             $.ajax({
                 type: "POST",
@@ -874,13 +954,68 @@
                 async: false,
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
-                    "groupId": groupId,
+                    groupId: blockFieldGroupId,
                 },
                 success: function(response) {
                     console.log(response);
+
+                    if (!Array.isArray(response) || response.length === 0) return;
+
+                    const position = response[0].position;
+                    const $li = $('<li style="margin-bottom: 1rem;"></li>');
+
+                    response.forEach(field => {
+                        const inputHtml = renderFieldInput(field, groupId, position);
+                        $li.append(`<div class="modal-field-group">${inputHtml}</div>`);
+                    });
+
+                    $li.append(`
+                        <div style="text-align:right;">
+                            <button type="button"
+                                class="pb-btn-delete-group-item"
+                                data-group-id="${groupId}"
+                                data-position="${position}">
+                                Delete
+                            </button>
+                        </div>
+                    `);
+
+                    $list.append($li);
+
+                    // Optional: reinitialize editors if HTML fields were added
+                    initDynamicEditors();
                 },
                 error: function(response) {
-                    console.error(response);
+                    console.error('Error creating group item:', response);
+                    alert('Failed to add group item.');
+                }
+            });
+        }
+
+        function deleteGroupItems(el) {
+            const groupId = $(el).data('group-id');
+            const position = $(el).data('position');
+            console.log("Deleting group items...", groupId, position);
+
+            const $allItemsInGroup = $(`.pb-btn-delete-group-item[data-group-id="${groupId}"]`);
+            const uniquePositions = [...new Set($allItemsInGroup.map((_, el) => $(el).data('position')).get())];
+
+            if (uniquePositions.length <= 1) {
+                alert("You must keep at least one group item.");
+                return;
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('deleteBlockFieldGroupItems') }}",
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    groupId: groupId,
+                    position: position
+                },
+                success: function(response) {
+                    console.log(response);
+
                 }
             });
         }

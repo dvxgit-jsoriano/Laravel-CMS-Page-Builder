@@ -219,33 +219,38 @@ class MainController extends Controller
     {
         $groupId = $request->groupId;
 
-        // I need to double check if the blockFieldGroupItem() has any items.
+        // Check if the block field group has any items
         if (BlockFieldGroupItem::where('block_field_group_id', $groupId)->count() == 0) {
             return response()->json(['message' => 'No items found for this block field group.'], 404);
         }
 
-        // Get the max position for the block field group items
+        // Get next position
         $maxPos = BlockFieldGroupItem::where('block_field_group_id', $groupId)->max('position') ?? 0;
-        $maxPos++;
+        $newPosition = $maxPos + 1;
 
-        // I need to get the records from  block field group item with position 1
-        $groupItemsPositionFirst = BlockFieldGroupItem::where('block_field_group_id', $groupId)
+        // Get the template (position 1)
+        $templateItems = BlockFieldGroupItem::where('block_field_group_id', $groupId)
             ->where('position', 1)
             ->get();
 
-        if ($groupItemsPositionFirst->isNotEmpty()) {
-            foreach ($groupItemsPositionFirst as $item) {
+        if ($templateItems->isNotEmpty()) {
+            foreach ($templateItems as $item) {
                 BlockFieldGroupItem::create([
                     'block_field_group_id' => $item->block_field_group_id,
                     'field_key' => $item->field_key,
                     'field_value' => '', // Reset value
                     'field_type' => $item->field_type,
-                    'position' => $maxPos,
+                    'position' => $newPosition,
                 ]);
             }
         }
 
-        return response()->json(['success' => true, 'position' => $maxPos, 'message' => 'Block field group item created successfully.']);
+        // Refetch the newly created items to return to frontend
+        $newItems = BlockFieldGroupItem::where('block_field_group_id', $groupId)
+            ->where('position', $newPosition)
+            ->get();
+
+        return response()->json($newItems);
     }
 
     public function getPages($siteId, Request $request)
@@ -374,5 +379,37 @@ class MainController extends Controller
     public function deleteBlock(Request $request)
     {
         return Block::where('id', $request->blockId)->delete();
+    }
+
+    public function deleteBlockFieldGroupItems(Request $request)
+    {
+        $groupId = $request->groupId;
+        $position = $request->position;
+
+        // Delete all items in the specified group and position
+        BlockFieldGroupItem::where('block_field_group_id', $groupId)
+            ->where('position', $position)
+            ->delete();
+
+        $remainingItems = BlockFieldGroupItem::where('block_field_group_id', $groupId)
+            ->orderBy('position')
+            ->get();
+
+        $grouped = $remainingItems->groupBy('position')->values();
+        $newPosition = 1;
+
+        foreach ($grouped as $group) {
+            foreach ($group as $item) {
+                $item->update(['position' => $newPosition]);
+            }
+            $newPosition++;
+        }
+
+        // Return all items with updated positions (flat)
+        $updatedItems = BlockFieldGroupItem::where('block_field_group_id', $groupId)
+            ->orderBy('position')
+            ->get();
+
+        return $updatedItems;
     }
 }
