@@ -60,6 +60,7 @@
                 <div class="canvas-buttons">
                     <button class="pb-btn-clear">Clear Data</button>
                     <button class="pb-btn-preview" onclick="openTab()">Preview Page</button>
+                    <button class="pb-btn-publish" onclick="publish()">Publish</button>
                 </div>
             </div>
             <div id="sortable-list" class="canvas-content">
@@ -1026,6 +1027,32 @@
                     alert("There is an error found while deleting the group items.");
                 }
             });
+        }
+
+        function publish() {
+            console.log("Publishing page...");
+
+            const html = scanContent();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('publishPage') }}",
+                async: false,
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token added here
+                    pageId: globalPageId,
+                    html: html
+                },
+                success: function(response) {
+                    console.log("Page published successfully!");
+                    alert("Page published successfully!");
+                },
+                error: function(response) {
+                    console.error("Error publishing page:", response);
+                    alert("There was an error publishing the page.");
+                }
+            });
+
         }
     </script>
 

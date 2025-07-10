@@ -126,6 +126,38 @@ function openTab() {
     });
 }
 
+function scanContent() {
+    // Clone the layout content using jQuery
+    const $clonedLayout = $('#sortable-list').clone();
+
+    // Remove all elements with class 'edit-btn' and 'delete-btn'
+    $clonedLayout.find('.edit-btn').remove();
+    $clonedLayout.find('.delete-btn').remove();
+    $clonedLayout.find('.loading-overlay').remove();
+
+    const layoutContent = $clonedLayout.html();
+
+    const layoutHeaderStyles = $('#grouped-styles').html();
+    const layoutHeaderScripts = $('#grouped-scripts').html();
+
+    const html =
+        '<!DOCTYPE html>' +
+        '<html lang="en">' +
+        '<head>' +
+        '<meta charset="UTF-8">' +
+        '<title>Exported Layout</title>' +
+        layoutHeaderStyles +
+        /* '<script src="https://cdn.tailwindcss.com"><\/script>' + */
+        '</head>' +
+        '<body class="bg-gray-50">' +
+        layoutContent +
+        layoutHeaderScripts +
+        '</body>' +
+        '</html>';
+
+    return html;
+}
+
 
 function openModal(triggerEl) {
     const target = $(triggerEl).data('target');

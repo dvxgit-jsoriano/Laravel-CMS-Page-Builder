@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 
 class MainController extends Controller
 {
@@ -411,5 +413,43 @@ class MainController extends Controller
             ->get();
 
         return $updatedItems;
+    }
+
+    public function publishPage(Request $request)
+    {
+        $pageId = $request->pageId;
+
+        $page = Page::find($pageId);
+
+        if (!$page) {
+            return response()->json(['message' => 'Page not found'], 404);
+        }
+
+        $html = $request->html;
+
+        $viewPath = resource_path('views/pages/' . $page->slug . '.blade.php');
+        // Ensure the directory exists
+        if (!file_exists(dirname($viewPath))) {
+            mkdir(dirname($viewPath), 0755, true);
+        }
+        // Write the HTML content to the file
+        File::put($viewPath, $html);
+
+        return response()->json(['message' => 'Page published successfully.']);
+    }
+
+    public function showPage($slug)
+    {
+        // Check if the slug is valid
+        $viewPath = "pages." . $slug;
+
+        Log::info("Attempting to load view: " . $viewPath);
+
+        // Check if the view exists
+        if (!View::exists($viewPath)) {
+            abort(404); // or return a fallback view
+        }
+
+        return view($viewPath);
     }
 }

@@ -38,3 +38,7 @@ Route::get('get-block-set', [MainController::class, 'getBlockSet'])->name('getBl
 
 Route::post('upload-asset-library', [AssetLibraryController::class, 'uploadAssetLibrary'])->name('uploadAssetLibrary');
 Route::get('get-asset-library', [AssetLibraryController::class, 'getAssetLibrary'])->name('getAssetLibrary');
+
+Route::post('publish-page', [MainController::class, 'publishPage'])->name('publishPage');
+// Display the page by slug
+Route::get('/{slug}', [MainController::class, 'showPage']);
