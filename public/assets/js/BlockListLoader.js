@@ -204,8 +204,8 @@ class BlockListLoader {
                                                 ${menuLinks}
                                             </ul>
                                             <div class="ms-lg-3">
-                                                <a class="btn custom-btn custom-border-btn" href="${getFieldValue('Reservation URL')}">
-                                                    ${getFieldValue('Reservation Title')}
+                                                <a class="btn custom-btn custom-border-btn" href="${getFieldValue('Utility URL')}">
+                                                    ${getFieldValue('Utility Title')}
                                                     <i class="bi-arrow-up-right ms-2"></i>
                                                 </a>
                                             </div>

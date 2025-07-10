@@ -28,14 +28,14 @@ class HotelDiavox implements PageTemplateInterface
                     ],
                     [
                         'block_id' => $block->id,
-                        'field_key' => 'Reservation Title',
-                        'field_value' => 'Reservation',
+                        'field_key' => 'Utility Title',
+                        'field_value' => 'Login',
                         'field_type' => 'text',
                     ],
                     [
                         'block_id' => $block->id,
-                        'field_key' => 'Reservation URL',
-                        'field_value' => '#',
+                        'field_key' => 'Utility URL',
+                        'field_value' => '/login',
                         'field_type' => 'text',
                     ]
                 ];

@@ -631,10 +631,13 @@
                 });
 
                 Object.entries(groupedItems).forEach(([pos, fields]) => {
-                    const li = $('<li style="margin-bottom: 1rem;"></li>');
+                    // Set the blockFieldGroupId and position for each li item. This is for delete purpose.
+                    const li = $(
+                        `<li style="margin-bottom: 1rem;" data-group-id="${blockFieldGroupId}" data-position="${pos}"></li>`
+                    );
                     fields.forEach(field => {
                         li.append(`
-                            <div class="modal-field-group">
+                            <div class="modal-field-group" data-block-field-group-item-id="${field.id}">
                                 ${renderFieldInput(field, groupId, pos)}
                             </div>
                         `);
@@ -995,11 +998,12 @@
         function deleteGroupItems(el) {
             const groupId = $(el).data('group-id');
             const position = $(el).data('position');
-            console.log("Deleting group items...", groupId, position);
+            //console.log("Deleting group items...", groupId, position);
 
             const $allItemsInGroup = $(`.pb-btn-delete-group-item[data-group-id="${groupId}"]`);
             const uniquePositions = [...new Set($allItemsInGroup.map((_, el) => $(el).data('position')).get())];
 
+            // Validate deletion if there is only 1 item left in the group.
             if (uniquePositions.length <= 1) {
                 alert("You must keep at least one group item.");
                 return;
@@ -1008,14 +1012,18 @@
             $.ajax({
                 type: "DELETE",
                 url: "{{ route('deleteBlockFieldGroupItems') }}",
+                async: false,
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
                     groupId: groupId,
                     position: position
                 },
                 success: function(response) {
-                    console.log(response);
-
+                    // Find and remove the corresponding <li> with data-group-id and data-position.
+                    $(`li[data-group-id="${groupId}"][data-position="${position}"]`).remove();
+                },
+                error: function(response) {
+                    alert("There is an error found while deleting the group items.");
                 }
             });
         }
