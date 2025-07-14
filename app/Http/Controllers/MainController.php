@@ -168,6 +168,14 @@ class MainController extends Controller
         /**
          * Existing Templates
          * - Hotel Diavox
+         * 
+         * Field Types:
+         * - text
+         * - textarea
+         * - file
+         * - html
+         * - select
+         * - page-link (select input)
          */
         $templateClass = 'App\\Templates\\' . str_replace(' ', '', $templateName);
 

@@ -58,7 +58,7 @@
             <div class="canvas-header">
                 <h2 class="section-title">Page Layout</h2>
                 <div class="canvas-buttons">
-                    <button class="pb-btn-clear">Clear Data</button>
+                    {{-- <button class="pb-btn-clear">Clear Data</button> --}}
                     <button class="pb-btn-preview" onclick="openTab()">Preview Page</button>
                     <button class="pb-btn-publish" onclick="publish()">Publish</button>
                 </div>
@@ -193,6 +193,7 @@
         var globalTemplateName = @json($template->name) ?? '';
         var globalPageId;
         var globalBlockId;
+        var globalListPages;
         var pageData;
         var previousTemplateId;
         var selectedAssetSrc = null;
@@ -274,6 +275,8 @@
                     templateId: globalTemplateId
                 },
                 success: function(response) {
+                    // Store response to the global page list
+                    globalListPages = response;
                     $('#select-page').empty();
                     $('#select-page').append(
                         `<option selected disabled>--Select Page--</option>`
@@ -528,10 +531,24 @@
                             </div>
                         `;
                     case 'select':
-                        return `<select ${baseAttrs}>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                    </select>`;
+                        return `
+                            <select ${baseAttrs}>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                            </select>
+                        `;
+                    case 'page-links':
+                        let options = ``;
+                        globalListPages.forEach(page => {
+                            const selected = field.field_value === page.slug ? 'selected' : '';
+                            options += `<option value="${page.slug}" ${selected}>${page.name}</option>`;
+                        });
+                        return `
+                            <select ${baseAttrs}>
+                                <option value="#" disabled>None</option>
+                                ${options}
+                            </select>
+                        `;
                     default:
                         return '';
                 }
@@ -599,6 +616,23 @@
                         `;
                         break;
 
+                    case 'page-links':
+                        let options = ``;
+                        globalListPages.forEach(page => {
+                            const selected = field.field_value === page.slug ? 'selected' : '';
+                            options += `<option value="${page.slug}" ${selected}>${page.name}</option>`;
+                        });
+                        htmlElement = `
+                            <div class="modal-group-input" data-single="true">
+                                <label for="${field.field_key}">${field.field_key}</label>
+                                <select data-id="${field.id}" data-single="true" data-field-key="${field.field_key}" data-field-type="${field.field_type}" class="modal-input">
+                                    <option value="#" disabled>None</option>
+                                    ${options}
+                                </select>
+                            </div>
+                        `;
+                        break;
+
                     default:
                         break;
                 }
@@ -611,7 +645,7 @@
                 const blockFieldGroupId = group.id;
                 const groupId = group.group_name.toLowerCase().replace(/\s+/g, '-');
                 const groupWrapper = $(`
-                        <div class="modal-field-group" style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF;">
+                        <div class="modal-field-group" style="border: solid 1px #EEEEEE; padding: 1rem; background-color: #EFEFEF; margin-top: 1rem;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label style="font-weight:bold;">${group.group_name}</label>
                                 <button type="button" class="pb-btn-add-group-item" data-block-field-group-id="${blockFieldGroupId}" data-group-id="${groupId}" onclick="createNewBlockFieldGroupItem(this);">Add</button>
