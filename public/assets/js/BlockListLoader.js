@@ -42,62 +42,68 @@ class BlockListLoader {
         switch (templateName) {
             case "Default Template":
                 $("#draggable-list").append(`
-                <li data-block-type="navigation">
-                    <h4>Navigation</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
-                </li>
-            `);
+                    <li data-block-type="navigation">
+                        <h4>Navigation</h4>
+                        <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="hero">
-                    <h4>Hero</h4>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
-                </li>
-            `);
+                    <li data-block-type="hero">
+                        <h4>Hero</h4>
+                        <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg">
+                    </li>
+                `);
                 break;
 
             case "Hotel Diavox":
                 $("#draggable-list").append(`
-                <li data-block-type="Navigation">
-                    <h4>Navigation</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-navigation.png">
-                </li>
-            `);
+                    <li data-block-type="Navigation">
+                        <h4>Navigation</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-navigation.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="Hero">
-                    <h4>Hero</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-hero.png">
-                </li>
-            `);
+                    <li data-block-type="Hero">
+                        <h4>Hero</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-hero.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="About">
-                    <h4>About</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-about.png">
-                </li>
-            `);
+                    <li data-block-type="About">
+                        <h4>About</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-about.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="Staff">
-                    <h4>Staff</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-staff.png">
-                </li>
-            `);
+                    <li data-block-type="Staff">
+                        <h4>Staff</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-staff.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="Menu">
-                    <h4>Menu</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-menu.png">
-                </li>
-            `);
+                    <li data-block-type="Menu">
+                        <h4>Menu</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-menu.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="Reviews">
-                    <h4>Reviews</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-reviews.png">
-                </li>
-            `);
+                    <li data-block-type="Reviews">
+                        <h4>Reviews</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-reviews.png">
+                    </li>
+                `);
                 $("#draggable-list").append(`
-                <li data-block-type="Contacts">
-                    <h4>Contacts</h4>
-                    <img src="assets/images/templates/hotel-diavox/component-contacts.png">
-                </li>
-            `);
+                    <li data-block-type="Contacts">
+                        <h4>Contacts</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-contacts.png">
+                    </li>
+                `);
+                $("#draggable-list").append(`
+                    <li data-block-type="Footer">
+                        <h4>Footer</h4>
+                        <img src="assets/images/templates/hotel-diavox/component-footer.png">
+                    </li>
+                `);
 
                 break;
 
@@ -528,6 +534,63 @@ class BlockListLoader {
                                         </div>
                                     </div>
                                 </div>
+                            </section>
+                        `;
+                    case 'Footer':
+                        return `
+                            <section class="section-group" data-block-id="${blockData.id}" data-block-type="${blockData.type}">
+                                <footer class="site-footer">
+                                ${renderActionButtons(blockData.id)}
+                                    <div class="container">
+                                        <div class="row">
+
+                                            <div class="col-lg-4 col-12 me-auto">
+                                                <em class="text-white d-block mb-4">Where to find us?</em>
+
+                                                <strong class="text-white">
+                                                    <i class="bi-geo-alt me-2"></i>
+                                                    ${getFieldValue('Where to find us')}
+                                                </strong>
+
+                                                <ul class="social-icon mt-4">
+                                                    ${getFieldValue('Icon Facebook URL') ? `<li class="social-icon-item"><a href="${getFieldValue('Icon Facebook URL')}" class="social-icon-link bi-facebook"></a></li>` : ''}
+                                                    ${getFieldValue('Icon Twitter URL') ? `<li class="social-icon-item"><a href="${getFieldValue('Icon Twitter URL')}" target="_new" class="social-icon-link bi-twitter"></a></li>` : ''}
+                                                    ${getFieldValue('Icon WhatsApp URL') ? `<li class="social-icon-item"><a href="${getFieldValue('Icon WhatsApp URL')}" class="social-icon-link bi-whatsapp"></a></li>` : ''}
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                                                <em class="text-white d-block mb-4">Contact</em>
+
+                                                <p class="d-flex mb-1">
+                                                    <strong class="me-2">Phone:</strong>
+                                                    <a href="#" class="site-footer-link">
+                                                        ${getFieldValue('Contact Phone')}
+                                                    </a>
+                                                </p>
+
+                                                <p class="d-flex">
+                                                    <strong class="me-2">Email:</strong>
+
+                                                    <a href="#" class="site-footer-link">
+                                                        ${getFieldValue('Contact Email')}
+                                                    </a>
+                                                </p>
+                                            </div>
+
+
+                                            <div class="col-lg-5 col-12">
+                                                <em class="text-white d-block mb-4">Opening Hours.</em>
+                                                <p class="text-white">
+                                                ${getFieldHTML('Opening Hours')}
+                                                </p>
+                                            </div>
+
+                                            <div class="col-lg-8 col-12 mt-4">
+                                                <p class="copyright-text mb-0">${getFieldValue('Copyright Text')}</p>
+                                            </div>
+                                        </div>
+                                </footer>
                             </section>
                         `;
                     default:

@@ -380,6 +380,58 @@ class HotelDiavox implements PageTemplateInterface
                     ]
                 ];
                 break;
+            case 'Footer':
+                $blockFields = [
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Where to find us',
+                        'field_value' => '1234 Main Bridge Town Street, Global City, Philippines',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Contact Phone',
+                        'field_value' => '(63)999-234-3210',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Contact Email',
+                        'field_value' => 'hotel.diavox.com',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Opening Hours',
+                        'field_value' => 'Monday-Friday: 8:00 AM - 10:00 PM,<br> Saturday-Sunday: 9:00 AM - 11:00 PM',
+                        'field_type' => 'html',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Icon Facebook URL',
+                        'field_value' => 'https://www.facebook.com/hoteldiavox',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Icon Twitter URL',
+                        'field_value' => 'https://www.twitter.com/hoteldiavox',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Icon Whatsapp URL',
+                        'field_value' => 'https://www.whatsapp.com/hoteldiavox',
+                        'field_type' => 'text',
+                    ],
+                    [
+                        'block_id' => $block->id,
+                        'field_key' => 'Copyright Text',
+                        'field_value' => '© 2023 Hotel Diavox. All rights reserved.',
+                        'field_type' => 'text',
+                    ]
+                ];
+                break;
 
             // Add new cases for blocks here.
             default:
