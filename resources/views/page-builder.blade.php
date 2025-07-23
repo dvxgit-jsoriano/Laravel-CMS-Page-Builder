@@ -105,6 +105,9 @@
             <span class="modal-close-x" data-target="modalCreateNewPage" onclick="closeModal(this)">&times;</span>
             <h2 class="section-title">Create a new page</h2>
 
+            {{-- Notification here --}}
+            <div id="modalNotification" class="modal-notification" style="display: none;">There is an error</div>
+
             <div class="modal-body">
                 <label for="pageName">Page
                     Name</label>
@@ -339,7 +342,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('createPage') }}",
+                url: "{{ route('contentManagement.createPage') }}",
                 data: {
                     _token: '{{ csrf_token() }}', // CSRF token added here
                     siteId: globalSite,
@@ -352,6 +355,11 @@
                     loadPages();
 
                     closeModal(triggerEl);
+                },
+                error: function(response) {
+                    console.log(response);
+                    $("#modalNotification").text("Error creating page: " + response.responseJSON.message)
+                        .show();
                 }
             });
         }

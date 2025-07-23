@@ -276,6 +276,18 @@ body {
     outline: none;
 }
 
+.modal-notification {
+    background: #ffe6e6;
+    /* light red background */
+    color: #b30000;
+    /* dark red text */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ff9999;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
 textarea.modal-input {
     height: 12rem;
 }

@@ -136,17 +136,40 @@ class MainController extends Controller
         $templateId = $request->templateId;
         $isLandingPage = false;
 
+        $request->validate([
+            'siteId'     => 'required|exists:sites,id',
+            'pageName'   => 'required|string|max:255',
+            'templateId' => 'required|exists:templates,id',
+        ]);
+
+        $exists = Page::where('site_id', $siteId)
+            ->where('name', $pageName)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => "A page named '{$pageName}' already exists for this site."
+            ], 422); // 422 = Unprocessable Entity (validation error)
+        }
+
         $pageCount = Page::where('site_id', $siteId)->count();
 
-        if ($pageCount == 0) $isLandingPage = true;
+        if ($pageCount == 0) {
+            $isLandingPage = true;
+        }
 
-        Page::create([
+        $page = Page::create([
             'site_id' => $siteId,
             'template_id' => $templateId,
             'name' => $pageName,
             'slug' => Str::slug($pageName),
-            'is_landing_page' => $isLandingPage
+            'is_landing_page' => $isLandingPage,
         ]);
+
+        return response()->json([
+            'message' => "Page '{$page->name}' created successfully.",
+            'page'    => $page
+        ], 201);
     }
 
     public function createBlock(Request $request)
@@ -168,7 +191,7 @@ class MainController extends Controller
         /**
          * Existing Templates
          * - Hotel Diavox
-         * 
+         *
          * Field Types:
          * - text
          * - textarea
