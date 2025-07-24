@@ -349,7 +349,7 @@ class BlockListLoader {
                                     </div>
 
                                     <div class="border-top mt-2 pt-2">
-                                        <small>Fresh brewed coffee and steamed milk</small>
+                                        <small>${item['Description']}</small>
                                     </div>
                                 </div>
                             `}).join('');
@@ -371,7 +371,7 @@ class BlockListLoader {
                                     </div>
 
                                     <div class="border-top mt-2 pt-2">
-                                        <small>Fresh brewed coffee and steamed milk</small>
+                                        <small>${item['Description']}</small>
                                     </div>
                                 </div>
                             `}).join('');
